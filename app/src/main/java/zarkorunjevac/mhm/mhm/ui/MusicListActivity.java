@@ -16,16 +16,18 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
 import zarkorunjevac.mhm.mhm.common.Utils;
+import zarkorunjevac.mhm.mhm.model.Music;
 import zarkorunjevac.mhm.mhm.presenter.MusicPresenter;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
-        MVP.ProvidedPresenterOps,
+        MVP.ProvidedMusicPresenterOps,
         MusicPresenter>
         implements MVP.RequiredViewOps {
 
@@ -42,7 +44,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         initializeViewFields();
         super.onCreate(MusicPresenter.class, this);
-        getPresenter().startProcessing();
+        getPresenter().startProcessing(Arrays.asList("all","freshest","remix","noremix"),
+                                       Arrays.asList("now","remix","noremix"));
+
     }
 
     @Override
@@ -81,10 +85,10 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        LatestBlogsFragment latestBlogsFragment=new LatestBlogsFragment();
+        LatestTacksFragment latestTacksFragment =new LatestTacksFragment();
         //latestBlogsFragment.getBlogs(blogs);
-        adapter.addFragment(latestBlogsFragment, "Latest");
-        adapter.addFragment(new PopularBlogsFragment(), "Popular");
+        adapter.addFragment(latestTacksFragment, "Latest");
+        adapter.addFragment(new PopularTracksFragment(), "Popular");
 
         viewPager.setAdapter(adapter);
     }
@@ -118,13 +122,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         }
     }
 
-    public void deleteDownloadedImages(View view) {
-        getPresenter().deleteDownloadedImages();
-    }
 
-    public void downloadImages(View view) {
-        getPresenter().startProcessing();
-    }
+
+
 
     @Override
     public void displayProgressBar() {
@@ -178,6 +178,11 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
      */
     @Override
     public void displayResults(Uri directoryPathname) {
+
+    }
+
+    @Override
+    public void loadTracks(Music music) {
 
     }
 

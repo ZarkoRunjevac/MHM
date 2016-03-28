@@ -7,19 +7,17 @@ package zarkorunjevac.mhm.mhm;
 import android.content.Context;
 import android.net.Uri;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import zarkorunjevac.mhm.mhm.common.ContextView;
 import zarkorunjevac.mhm.mhm.common.ModelOps;
 import zarkorunjevac.mhm.mhm.common.PresenterOps;
 import zarkorunjevac.mhm.mhm.model.Music;
+import zarkorunjevac.mhm.mhm.model.Track;
 
-/**
- * Defines the interfaces for the Download Image Viewer application
- * that are required and provided by the layers in the
- * Model-View-Presenter (MVP) pattern.  This design ensures loose
- * coupling between the layers in the app's MVP-based architecture.
- */
+
 public interface MVP {
     /**
      * This interface defines the minimum API needed by the
@@ -56,6 +54,8 @@ public interface MVP {
          * the download to the user.
          */
         void displayResults(Uri directoryPathname);
+
+        void loadTracks(Music music);
     }
 
     /**
@@ -78,10 +78,20 @@ public interface MVP {
          */
         void startProcessing();
 
+
+
         /**
          * Delete all the downloaded images.
          */
         void deleteDownloadedImages();
+    }
+
+    public interface ProvidedMusicPresenterOps
+            extends PresenterOps<MVP.RequiredViewOps> {
+        void startProcessing();
+        //myMethod(asList(1,2,3), asList(4,5,6));
+        void startProcessing(List<String> latest, List<String> popular);
+
     }
 
     /**
@@ -100,6 +110,8 @@ public interface MVP {
          */
         void onProcessingComplete(Uri url,
                                   Uri pathToImageFile);
+
+        void onProcessingComplete();
     }
 
     /**
@@ -137,6 +149,8 @@ public interface MVP {
     }
 
     public interface ProvidedMusicModelOps extends ModelOps<RequiredPresenterOps> {
-        Music downloadMusic(Context context);
+
+        List<Track> downloadPopular(Context context, String mode,int page, int count) throws IOException;
+        List<Track> downloadLatest(Context context, String sort,int page, int count) throws IOException;
     }
 }

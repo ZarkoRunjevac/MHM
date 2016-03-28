@@ -344,4 +344,9 @@ public class ImagePresenter
     public Context getApplicationContext() {
         return mView.get().getApplicationContext();
     }
+
+    @Override
+    public void onProcessingComplete() {
+
+    }
 }

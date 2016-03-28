@@ -140,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setupViewPager(ViewPager viewPager, List<Blog> blogs) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        LatestBlogsFragment latestBlogsFragment=new LatestBlogsFragment();
-        latestBlogsFragment.getBlogs(blogs);
-        adapter.addFragment(latestBlogsFragment, "Latest");
-        adapter.addFragment(new PopularBlogsFragment(), "Popular");
+        LatestTacksFragment latestTacksFragment =new LatestTacksFragment();
+        latestTacksFragment.getBlogs(blogs);
+        adapter.addFragment(latestTacksFragment, "Latest");
+        adapter.addFragment(new PopularTracksFragment(), "Popular");
 
         viewPager.setAdapter(adapter);
     }
