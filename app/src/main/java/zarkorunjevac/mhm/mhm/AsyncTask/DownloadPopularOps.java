@@ -1,4 +1,4 @@
-package zarkorunjevac.mhm.mhm.AsyncTask;
+package zarkorunjevac.mhm.mhm.asynctask;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,10 +6,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;
-import zarkorunjevac.mhm.mhm.model.Track;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.MusicPresenter;
 
 /**
@@ -20,18 +19,18 @@ public class DownloadPopularOps implements GenericAsyncTaskOps<String, Void, Lis
             DownloadPopularOps.class.getSimpleName();
 
     private Context mContext;
-    private CountDownLatch mExitBarrier;
+
     ConcurrentHashMap<String,List<Track>> mDownloadedTracks;
     private MusicPresenter mMusicPresenter;
     private int mPage;
     private int mCount;
     private String mKey;
 
-    public DownloadPopularOps(MusicPresenter musicPresenter, Context context, CountDownLatch exitBarrier,
+    public DownloadPopularOps(MusicPresenter musicPresenter, Context context,
                               ConcurrentHashMap<String,List<Track>> downloadedTracks,int page, int count){
         mMusicPresenter=musicPresenter;
         mContext=context;
-        mExitBarrier=exitBarrier;
+
         mDownloadedTracks=downloadedTracks;
         mPage=page;
         mCount=count;
@@ -57,6 +56,6 @@ public class DownloadPopularOps implements GenericAsyncTaskOps<String, Void, Lis
     @Override
     public void onPostExecute(List<Track> tracks) {
         if(null!=tracks) mDownloadedTracks.put(mKey,tracks);
-        mExitBarrier.countDown();
+       mMusicPresenter.onProcessingComplete(mKey);
     }
 }

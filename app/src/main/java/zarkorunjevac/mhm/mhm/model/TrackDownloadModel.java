@@ -10,6 +10,7 @@ import retrofit.Call;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
 
 /**
@@ -63,9 +64,9 @@ public class TrackDownloadModel
     }
 
     @Override
-    public List<Track> downloadLatest(Context context, String sort,int page, int count) throws IOException {
+    public List<Track> downloadLatest(Context context, String mode,int page, int count) throws IOException {
         List<Track> tracks;
-        Call<List<Track>> call=mApiService.getTracks(page,sort,count);
+        Call<List<Track>> call=mApiService.getTracks(page,mode,count);
         tracks=call.execute().body();
         return tracks;
     }

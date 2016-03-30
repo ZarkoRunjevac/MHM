@@ -1,4 +1,4 @@
-package zarkorunjevac.mhm.mhm.ui;
+package zarkorunjevac.mhm.mhm.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,12 +66,7 @@ public class TestActvity extends AppCompatActivity {
 
 
 
-       /* RecyclerView recyclerView=new RecyclerView(this);
-        recyclerView.setLayoutParams(params);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        layout.addView(recyclerView);*/
+
 
 // now create layout params
         LinearLayout.LayoutParams layoutParam = new

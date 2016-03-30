@@ -1,4 +1,4 @@
-package zarkorunjevac.mhm.mhm.ui;
+package zarkorunjevac.mhm.mhm.ui.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,24 +17,35 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
 import zarkorunjevac.mhm.mhm.common.Utils;
-import zarkorunjevac.mhm.mhm.model.Music;
+import zarkorunjevac.mhm.mhm.model.pojo.Music;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.MusicPresenter;
+import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
+import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedMusicPresenterOps,
         MusicPresenter>
-        implements MVP.RequiredViewOps {
+        implements MVP.RequiredViewOps,
+        MVP.ProvidedMusicListActivityOps{
 
     protected ProgressBar mLoadingProgressBar;
     protected ViewPager mViewPager;
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
+
+    private HashMap<String,List<Track>> mPopularLists=new HashMap<String,List<Track>>();
+    private HashMap<String,List<Track>> mLatestLists=new HashMap<String,List<Track>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +55,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         initializeViewFields();
         super.onCreate(MusicPresenter.class, this);
-        getPresenter().startProcessing(Arrays.asList("all","freshest","remix","noremix"),
-                                       Arrays.asList("now","remix","noremix"));
+        getPresenter().startProcessing(Arrays.asList("all", "fresh", "remix", "noremix"),
+                Arrays.asList("now", "remix", "noremix"));
 
     }
 
@@ -60,11 +71,6 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         super.onDestroy();
     }
 
-
-
-
-
-
     private void initializeViewFields() {
 
         mLoadingProgressBar =
@@ -74,13 +80,18 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         setSupportActionBar(toolbar);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-       // setupViewPager(mViewPager);
+
         // Set Tabs inside Toolbar
         //1. getPresenter().startProcessing();
 
          mTabs = (TabLayout) findViewById(R.id.tabs);
-        // mTabs.setupWithViewPager(mViewPager);
 
+
+    }
+
+    private void setupViewFields(){
+        setupViewPager(mViewPager);
+        mTabs.setupWithViewPager(mViewPager);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -205,6 +216,41 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void reportDownloadFailure(String listName) {
+
+    }
+
+    @Override
+    public void dispayResults(ConcurrentHashMap<String, List<Track>> trackLists) {
+
+        mLatestLists=new HashMap<String,List<Track>>();
+        mPopularLists=new HashMap<String,List<Track>>();
+        for(Map.Entry<String,List<Track>> list:trackLists.entrySet()){
+            String listName=list.getKey();
+            String[] parts=listName.split(Pattern.quote("."));
+            if(parts[0].equals("latest")){
+                mLatestLists.put(parts[1],list.getValue());
+            }
+            else{
+                mPopularLists.put(parts[1],list.getValue());
+            }
+        }
+
+        setupViewFields();
+
+    }
+
+    @Override
+    public HashMap<String, List<Track>> loadLatestLists() {
+        return mLatestLists;
+    }
+
+    @Override
+    public HashMap<String, List<Track>> loadPopularLists() {
+        return mPopularLists;
     }
 }
 

@@ -12,15 +12,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadLatestAsyncTask;
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadLatestOps;
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadPopularAsyncTask;
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadPopularOps;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadLatestAsyncTask;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadLatestOps;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularAsyncTask;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularOps;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericPresenter;
-import zarkorunjevac.mhm.mhm.model.Music;
+import zarkorunjevac.mhm.mhm.model.pojo.Music;
 import zarkorunjevac.mhm.mhm.model.TrackDownloadModel;
-import zarkorunjevac.mhm.mhm.model.Track;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
 /**
  * Created by zarko.runjevac on 3/24/2016.
@@ -45,6 +45,36 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
     public MusicPresenter(){}
 
     @Override
+    public void onCreate(MVP.RequiredViewOps view) {
+        mView = new WeakReference<>(view);
+        resetFields();
+        super.onCreate(TrackDownloadModel.class,
+                this);
+    }
+
+    @Override
+    public void onConfigurationChange(MVP.RequiredViewOps view) {
+        mView = new WeakReference<>(view);
+
+        if (allDownloadsComplete()) {
+            // Hide the progress bar.
+            mView.get().dismissProgressBar();
+            Log.d(TAG,
+                    "All lists have finished downloading");
+        } else if (downloadsInProgress()) {
+            // Display the progress bar.
+            mView.get().displayProgressBar();
+
+            Log.d(TAG,
+                    "Not all lists have finished downloading");
+        }
+
+        // (Re)display the URLs.
+        mView.get().displayUrls();
+        mView.get().dispayResults(mDownloadedTracks);
+    }
+
+    @Override
     public Context getActivityContext() {
         return mView.get().getActivityContext();
     }
@@ -66,7 +96,11 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
     public void startProcessing(List<String> latest, List<String> popular) {
         mView.get().displayProgressBar();
 
-        mNumListToHandle=latest.size()+popular.size();
+        int latestNum,popularNum;
+        //(mBlogs == null) ? 0 : mBlogs.size();
+        latestNum=(latest==null) ? 0 : latest.size();
+        popularNum=(popular==null) ? 0 :popular.size();
+        mNumListToHandle=latestNum+popularNum;
 
         mDownloadedTracks=new ConcurrentHashMap<String, List<Track>>();
         final CountDownLatch exitBarrier=new CountDownLatch(mNumListToHandle);
@@ -82,13 +116,13 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
         DownloadPopularOps downloadPopularOps;
 
         for(String tracklist : latest){
-            downloadLatestOps=new DownloadLatestOps(this,getActivityContext(),exitBarrier,mDownloadedTracks,1,20);
+            downloadLatestOps=new DownloadLatestOps(this,getActivityContext(),mDownloadedTracks,1,20);
             downloadLatestAsyncTask=new DownloadLatestAsyncTask(downloadLatestOps);
             downloadLatestAsyncTask.executeOnExecutor(downloadExecutor,tracklist);
         }
 
         for(String trackList : popular){
-            downloadPopularOps=new DownloadPopularOps(this,getActivityContext(),exitBarrier,mDownloadedTracks,1,20);
+            downloadPopularOps=new DownloadPopularOps(this,getActivityContext(),mDownloadedTracks,1,20);
             downloadPopularAsyncTask=new DownloadPopularAsyncTask(downloadPopularOps);
             downloadPopularAsyncTask.executeOnExecutor(downloadExecutor,trackList);
 
@@ -96,38 +130,54 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
         }
 
 
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
+
                     exitBarrier.await();
 
                 }catch (Exception e){
                     Log.d(TAG, "run: ");
                 }finally {
-                    onProcessingComplete();
+                    //onProcessingComplete();
                 }
+             }
+        }).start();*/
 
-
-            }
-        }).start();
-
-    }
-
-
-
-    @Override
-    public void onCreate(MVP.RequiredViewOps view) {
-        mView = new WeakReference<>(view);
-        resetFields();
-        super.onCreate(TrackDownloadModel.class,
-                this);
     }
 
     @Override
-    public void onConfigurationChange(MVP.RequiredViewOps view) {
-        mView = new WeakReference<>(view);
+    public void onProcessingComplete(String listName) {
+
+        ++mNumListHandled;
+
+        if(mDownloadedTracks.get(listName)==null){
+            // TODO add this string to string.xml
+
+            mView.get().reportDownloadFailure(listName);
+
+        }else
+        {
+            Log.d(TAG, "onProcessingComplete: received list "+listName);
+        }
+
+        tryToDisplayLists();
     }
+
+    private void tryToDisplayLists(){
+        if (allDownloadsComplete()) {
+            // Dismiss the progress bar.
+            mView.get().dismissProgressBar();
+
+            // Initialize state for the next run.
+            resetFields();
+
+            mView.get().dispayResults(mDownloadedTracks);
+        }
+    }
+
+
 
     @Override
     public void onDestroy(boolean isChangingConfigurations) {
@@ -141,11 +191,7 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
 
     }
 
-    @Override
-    public void onProcessingComplete() {
-        String s="ss";
-        Log.d(TAG, "onProcessingComplete: ");
-    }
+
 
     public MVP.ProvidedMusicModelOps getModel (){return (MVP.ProvidedMusicModelOps) mOpsInstance;}
 
@@ -156,4 +202,21 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
         mNumListHandled=0;
 
     }
+
+    /* Returns true if all the downloads have completed, else false.
+            */
+    private boolean allDownloadsComplete() {
+        return mNumListHandled == mNumListToHandle
+                && mNumListHandled > 0;
+    }
+
+    /**
+     * Returns true if there are any downloads in progress, else false.
+     */
+    private boolean downloadsInProgress() {
+        return  mNumListToHandle > 0;
+    }
+
+
+
 }

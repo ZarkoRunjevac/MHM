@@ -1,9 +1,9 @@
-package zarkorunjevac.mhm.mhm.AsyncTask;
+package zarkorunjevac.mhm.mhm.asynctask;
 
 import java.util.List;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTask;
-import zarkorunjevac.mhm.mhm.model.Track;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
 /**
  * Created by zarkorunjevac on 26/03/16.

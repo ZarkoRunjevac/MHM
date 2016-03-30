@@ -9,13 +9,15 @@ import android.net.Uri;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import zarkorunjevac.mhm.mhm.common.ContextView;
 import zarkorunjevac.mhm.mhm.common.ModelOps;
 import zarkorunjevac.mhm.mhm.common.PresenterOps;
-import zarkorunjevac.mhm.mhm.model.Music;
-import zarkorunjevac.mhm.mhm.model.Track;
+import zarkorunjevac.mhm.mhm.model.pojo.Music;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
 
 public interface MVP {
@@ -53,7 +55,11 @@ public interface MVP {
          * Start the DisplayImagesActivity to display the results of
          * the download to the user.
          */
+
+        void reportDownloadFailure(String listName);
         void displayResults(Uri directoryPathname);
+
+        void dispayResults(ConcurrentHashMap<String,List<Track>> trackLists);
 
         void loadTracks(Music music);
     }
@@ -111,7 +117,7 @@ public interface MVP {
         void onProcessingComplete(Uri url,
                                   Uri pathToImageFile);
 
-        void onProcessingComplete();
+        void onProcessingComplete(String listName);
     }
 
     /**
@@ -152,5 +158,11 @@ public interface MVP {
 
         List<Track> downloadPopular(Context context, String mode,int page, int count) throws IOException;
         List<Track> downloadLatest(Context context, String sort,int page, int count) throws IOException;
+    }
+
+    public interface ProvidedMusicListActivityOps{
+        HashMap<String,List<Track>> loadLatestLists( );
+
+        HashMap<String,List<Track>> loadPopularLists();
     }
 }

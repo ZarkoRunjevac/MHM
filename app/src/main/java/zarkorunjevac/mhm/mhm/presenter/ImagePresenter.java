@@ -346,7 +346,7 @@ public class ImagePresenter
     }
 
     @Override
-    public void onProcessingComplete() {
+    public void onProcessingComplete(String listName) {
 
     }
 }

@@ -1,4 +1,4 @@
-package zarkorunjevac.mhm.mhm.model;
+package zarkorunjevac.mhm.mhm.model.pojo;
 
 /**
  * Created by zarkorunjevac on 20/03/16.
