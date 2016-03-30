@@ -10,15 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -59,17 +63,22 @@ public class LatestTacksFragment extends Fragment {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
+        public TextView artistTextView;
+
+        public CircleImageView trackThumbnailImageView;
         public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_list, parent, false));
-            titleTextView=(TextView)itemView.findViewById(R.id.list_title);
+            titleTextView=(TextView)itemView.findViewById(R.id.track_title);
+            artistTextView=(TextView)itemView.findViewById(R.id.track_artist);
+            trackThumbnailImageView=(CircleImageView)itemView.findViewById(R.id.track_thumbnail);
         }
     }
     /**
      * Adapter to display recycler view.
      */
-    public static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    public  class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-        private static  int numberOfTracks = 3;
+
         private List<Track> mTracks;
         public ContentAdapter( List<Track> tracks) {
             mTracks=tracks;
@@ -85,20 +94,19 @@ public class LatestTacksFragment extends Fragment {
 
             Track track=mTracks.get(position);
             TextView textView=holder.titleTextView;
-            textView.setText(track.getArtist());
+            textView.setText(track.getTitle());
+            holder.artistTextView.setText(track.getArtist());
+            Log.d("ContentAdapter", "onBindViewHolder: "+track.getThumbUrlMedium());
+            Picasso.with(LatestTacksFragment.this.getActivity())
+                    .load(track.getThumbUrlMedium()).
+                    into(holder.trackThumbnailImageView);
+
         }
-
-
-
         @Override
         public int getItemCount() {
             return (mTracks == null) ? 0 : mTracks.size();
            // return 3;
         }
-
-
-
-
     }
 
     @Override

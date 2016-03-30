@@ -116,13 +116,13 @@ public class MusicPresenter extends GenericPresenter<MVP.RequiredPresenterOps,
         DownloadPopularOps downloadPopularOps;
 
         for(String tracklist : latest){
-            downloadLatestOps=new DownloadLatestOps(this,getActivityContext(),mDownloadedTracks,1,20);
+            downloadLatestOps=new DownloadLatestOps(this,getActivityContext(),mDownloadedTracks,1,6);
             downloadLatestAsyncTask=new DownloadLatestAsyncTask(downloadLatestOps);
             downloadLatestAsyncTask.executeOnExecutor(downloadExecutor,tracklist);
         }
 
         for(String trackList : popular){
-            downloadPopularOps=new DownloadPopularOps(this,getActivityContext(),mDownloadedTracks,1,20);
+            downloadPopularOps=new DownloadPopularOps(this,getActivityContext(),mDownloadedTracks,1,6);
             downloadPopularAsyncTask=new DownloadPopularAsyncTask(downloadPopularOps);
             downloadPopularAsyncTask.executeOnExecutor(downloadExecutor,trackList);
 
