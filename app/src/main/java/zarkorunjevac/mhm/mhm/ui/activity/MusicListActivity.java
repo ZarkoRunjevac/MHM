@@ -43,6 +43,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     protected ViewPager mViewPager;
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
+    public static final List<String> LATEST_LIST_FOR_DOWNLOAD=Arrays.asList("all", "fresh", "remix", "noremix");
+    public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
 
     private HashMap<String,List<Track>> mPopularLists=new HashMap<String,List<Track>>();
     private HashMap<String,List<Track>> mLatestLists=new HashMap<String,List<Track>>();
@@ -55,8 +57,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         initializeViewFields();
         super.onCreate(MusicPresenter.class, this);
-        getPresenter().startProcessing(Arrays.asList("all", "fresh", "remix", "noremix"),
-                Arrays.asList("now", "remix", "noremix"));
+        getPresenter().startProcessing(LATEST_LIST_FOR_DOWNLOAD,
+                POPULAR_LIST_FOR_DOWNLOAD);
 
     }
 

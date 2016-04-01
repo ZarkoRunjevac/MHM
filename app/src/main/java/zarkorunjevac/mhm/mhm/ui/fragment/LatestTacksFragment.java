@@ -10,22 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
+import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
 
 /**
  * Created by zarko.runjevac on 3/21/2016.
@@ -49,34 +55,22 @@ public class LatestTacksFragment extends Fragment {
 
         ScrollView m_Scroll = new ScrollView(getActivity());
 
-        HashMap<String,List<Track>> r=mMusicListActivityListener.loadLatestLists();
+        HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
-        for(Map.Entry<String,List<Track>> list:mMusicListActivityListener.loadLatestLists().entrySet()){
-
-
-            layout.addView(createView(list.getKey(), list.getValue()));
+        for(String listName: MusicListActivity.LATEST_LIST_FOR_DOWNLOAD){
+            layout.addView(createView(listName, trackList.get(listName)));
         }
+
         m_Scroll.addView(layout,layoutParam);
         return m_Scroll;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView;
-        public TextView artistTextView;
 
-        public CircleImageView trackThumbnailImageView;
-        public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.item_list, parent, false));
-            titleTextView=(TextView)itemView.findViewById(R.id.track_title);
-            artistTextView=(TextView)itemView.findViewById(R.id.track_artist);
-            trackThumbnailImageView=(CircleImageView)itemView.findViewById(R.id.track_thumbnail);
-        }
-    }
     /**
      * Adapter to display recycler view.
      */
-    public  class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    public  class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
 
 
         private List<Track> mTracks;
@@ -106,6 +100,29 @@ public class LatestTacksFragment extends Fragment {
         public int getItemCount() {
             return (mTracks == null) ? 0 : mTracks.size();
            // return 3;
+        }
+
+        public  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            public TextView titleTextView;
+            public TextView artistTextView;
+
+            public CircleImageView trackThumbnailImageView;
+            public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
+                super(inflater.inflate(R.layout.item_list, parent, false));
+                titleTextView=(TextView)itemView.findViewById(R.id.track_title);
+                artistTextView=(TextView)itemView.findViewById(R.id.track_artist);
+                trackThumbnailImageView=(CircleImageView)itemView.findViewById(R.id.track_thumbnail);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                Log.d(" ViewHolder", "onClick: ");
+                int position=getLayoutPosition();
+                Track track=mTracks.get(position);
+                getSoundCloudLink(track.getPosturl());
+                Utils.showToast(LatestTacksFragment.this.getActivity(),track.getPosturl());
+            }
         }
     }
 
@@ -148,26 +165,70 @@ public class LatestTacksFragment extends Fragment {
         layout.addView(recyclerView);
 
        final Button btn = new Button(getActivity());
-        btn.setText("Click Me");
+        btn.setText("v");
         btn.setLayoutParams(params);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("LatestTacksFragment", "onClick: "+adapter.getItemCount());
-                btn.setText(listName);
-                int curSize = adapter.getItemCount();
-                shortList.addAll(trackList.subList(3,trackList.size()));
+                Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
 
-                adapter.notifyDataSetChanged();
-                Log.d("LatestTacksFragment", "onClick: "+adapter.getItemCount());
+                if (btn.getText().equals("v")) {
+                    btn.setText("SHOW ALL");
+                    int curSize = adapter.getItemCount();
+                    shortList.addAll(trackList.subList(3, trackList.size()));
 
+                    adapter.notifyDataSetChanged();
+                    Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
+                } else {
+                    //strartnewactivity
+                }
             }
         });
 
         layout.addView(btn);
-
-
-
         return layout;
     }
+
+    private void getSoundCloudLink(final String url){
+
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Document doc= Jsoup.connect(url).get();
+                    Elements media = doc.select("[src]");
+
+                    for (Element src : media) {
+                        String link=src.attr("abs:src");
+                        if(link.contains("api.soundcloud")){
+                            Log.d("LatestTacksFragment", "run: "+src.attr("abs:src"));
+                        }
+
+
+                    }
+//                    Element iframe=doc.select("iframe").first();
+//                    Log.d("LatestTacksFragment", "run: iframe+"+iframe);
+//                    String src=iframe.attr("src");
+//                    //Log.d("LatestTacksFragment", "run: "+src);
+//
+//                    //String pattern="/tracks/(\\d+)";
+//                    String pattern="/tracks/(\\d+)";
+//                    Pattern r = Pattern.compile(pattern);
+//                    String link= URLDecoder.decode(src, "UTF-8");
+//                    Log.d("LatestTacksFragment", "run: "+link);
+//                    Matcher m = r.matcher(link);
+//                    while(m.find()){
+//                        Log.d("LatestTacksFragment", "run: "+m.group());
+//                    }
+                }catch (IOException e){
+
+                }
+
+            }
+        }).start();
+    }
+
+
 }
