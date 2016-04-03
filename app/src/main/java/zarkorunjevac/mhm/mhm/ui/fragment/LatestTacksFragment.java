@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -203,7 +204,8 @@ public class LatestTacksFragment extends Fragment {
                     for (Element src : media) {
                         String link=src.attr("abs:src");
                         if(link.contains("api.soundcloud")){
-                            Log.d("LatestTacksFragment", "run: "+src.attr("abs:src"));
+
+                            Log.d("LatestTacksFragment", "run: "+ URLDecoder.decode(src.attr("abs:src")));
                         }
 
 

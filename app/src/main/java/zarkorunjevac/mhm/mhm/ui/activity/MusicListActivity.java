@@ -29,13 +29,13 @@ import zarkorunjevac.mhm.mhm.common.GenericActivity;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Music;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
-import zarkorunjevac.mhm.mhm.presenter.MusicPresenter;
+import zarkorunjevac.mhm.mhm.presenter.TrackListPresenter;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
-        MVP.ProvidedMusicPresenterOps,
-        MusicPresenter>
+        MVP.ProvidedTrackListPresenterOps,
+        TrackListPresenter>
         implements MVP.RequiredViewOps,
         MVP.ProvidedMusicListActivityOps{
 
@@ -56,7 +56,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
 
         initializeViewFields();
-        super.onCreate(MusicPresenter.class, this);
+        super.onCreate(TrackListPresenter.class, this);
         getPresenter().startProcessing(LATEST_LIST_FOR_DOWNLOAD,
                 POPULAR_LIST_FOR_DOWNLOAD);
 

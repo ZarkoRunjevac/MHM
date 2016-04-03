@@ -92,10 +92,9 @@ public interface MVP {
         void deleteDownloadedImages();
     }
 
-    public interface ProvidedMusicPresenterOps
+    public interface ProvidedTrackListPresenterOps
             extends PresenterOps<MVP.RequiredViewOps> {
-        void startProcessing();
-        //myMethod(asList(1,2,3), asList(4,5,6));
+
         void startProcessing(List<String> latest, List<String> popular);
 
     }
@@ -107,15 +106,9 @@ public interface MVP {
      * so the Model layer can access Context's defined in the View
      * layer.
      */
-    public interface RequiredPresenterOps
+    public interface RequiredTrackListPresenterOps
             extends ContextView {
-        /**
-         * Interact with the View layer to display the
-         * downloaded/filtered images when all processing
-         * is complete.
-         */
-        void onProcessingComplete(Uri url,
-                                  Uri pathToImageFile);
+
 
         void onProcessingComplete(String listName);
     }
@@ -129,7 +122,7 @@ public interface MVP {
      * onConfigurationChange() method.
      */
     public interface ProvidedModelOps
-            extends ModelOps<RequiredPresenterOps> {
+            extends ModelOps<RequiredTrackListPresenterOps> {
         /**
          * Download the image located at the provided Internet url
          * using the URL class, store it on the android file system
@@ -154,7 +147,7 @@ public interface MVP {
 
     }
 
-    public interface ProvidedMusicModelOps extends ModelOps<RequiredPresenterOps> {
+    public interface ProvidedTrackListDownloadModelOps extends ModelOps<RequiredTrackListPresenterOps> {
 
         List<Track> downloadPopular(Context context, String mode,int page, int count) throws IOException;
         List<Track> downloadLatest(Context context, String sort,int page, int count) throws IOException;
@@ -165,4 +158,23 @@ public interface MVP {
 
         HashMap<String,List<Track>> loadPopularLists();
     }
+
+    public interface RequiredTrackPresenterOps
+            extends ContextView {
+
+        void onProcessingComplete(List<String> urls);
+    }
+
+    public interface ProvidedTrackDownloadModelOps extends ModelOps<RequiredTrackPresenterOps>{
+        List<String> downloadLinksFromPage(String url) throws IOException;
+        Uri findMusicStremLink(Context context, Track track);
+    }
+
+    public interface ProvidedTrackPresenterOps
+            extends PresenterOps<MVP.RequiredViewOps> {
+
+        void startProcessing(String url);
+
+    }
+
 }

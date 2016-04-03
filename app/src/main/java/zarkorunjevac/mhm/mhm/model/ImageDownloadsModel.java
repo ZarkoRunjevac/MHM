@@ -32,7 +32,7 @@ public class ImageDownloadsModel
      * A WeakReference used to access methods in the Presenter layer.
      * The WeakReference enables garbage collection.
      */
-    private WeakReference<MVP.RequiredPresenterOps> mPresenter;
+    private WeakReference<MVP.RequiredTrackListPresenterOps> mPresenter;
 
     /**
      * Hook method called when a new instance of AcronymModel is
@@ -44,7 +44,7 @@ public class ImageDownloadsModel
      *            A reference to the Presenter layer.
      */
     @Override
-    public void onCreate(MVP.RequiredPresenterOps presenter) {
+    public void onCreate(MVP.RequiredTrackListPresenterOps presenter) {
         // Set the WeakReference.
         mPresenter =
                 new WeakReference<>(presenter);

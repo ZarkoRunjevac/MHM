@@ -1,73 +1,66 @@
 package zarkorunjevac.mhm.mhm.model;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
-import zarkorunjevac.mhm.mhm.service.HypemApiService;
 
 /**
- * Created by zarko.runjevac on 3/24/2016.
+ * Created by zarkorunjevac on 02/04/16.
  */
-public class TrackDownloadModel
-        implements MVP.ProvidedMusicModelOps {
+public class TrackDownloadModel implements MVP.ProvidedTrackDownloadModelOps {
 
     protected final static String TAG =
-            TrackDownloadModel.class.getSimpleName();
+            TrackListDownloadModel.class.getSimpleName();
 
-    private String BASE_URL ="https://api.hypem.com/";
+    private WeakReference<MVP.RequiredTrackPresenterOps> mPresenter;
 
-
-
-    private HypemApiService mApiService;
-
-    /**
-     * A WeakReference used to access methods in the Presenter layer.
-     * The WeakReference enables garbage collection.
-     */
-    private WeakReference<MVP.RequiredPresenterOps> mPresenter;
 
     @Override
-    public void onCreate(MVP.RequiredPresenterOps presenter) {
+    public void onCreate(MVP.RequiredTrackPresenterOps presenter) {
         mPresenter =
                 new WeakReference<>(presenter);
-
-
-        Retrofit  service = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        mApiService =service.create(HypemApiService.class);
-
     }
 
     @Override
     public void onDestroy(boolean isChangingConfigurations) {
-    //no-op
+
     }
 
     @Override
-    public List<Track> downloadPopular(Context context, String mode,int page, int count) throws IOException {
-        List<Track> tracks;
-        Call<List<Track>> call=mApiService.getPopular(mode,page,count);
-        tracks=call.execute().body();
-        return tracks;
+    public List<String> downloadLinksFromPage(String url) throws IOException {
+        List<String> linksOnPage = new ArrayList<String>();
+
+        Document doc = Jsoup.connect(url).get();
+        Elements media = doc.select("[src]");
+
+        for (Element src : media) {
+            String link = src.attr("abs:src");
+            linksOnPage.add(URLDecoder.decode(link, "UTF-8"));
+            if (link.contains("api.soundcloud")) {
+                Log.d("LatestTacksFragment", "run: " + src.attr("abs:src"));
+            }
+
+
+        }
+        return linksOnPage;
     }
 
     @Override
-    public List<Track> downloadLatest(Context context, String mode,int page, int count) throws IOException {
-        List<Track> tracks;
-        Call<List<Track>> call=mApiService.getTracks(page,mode,count);
-        tracks=call.execute().body();
-        return tracks;
+    public Uri findMusicStremLink(Context context, Track track) {
+        return null;
     }
 }

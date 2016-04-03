@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
-import zarkorunjevac.mhm.mhm.presenter.MusicPresenter;
+import zarkorunjevac.mhm.mhm.presenter.TrackListPresenter;
 
 /**
  * Created by zarkorunjevac on 26/03/16.
@@ -21,13 +21,13 @@ public class DownloadPopularOps implements GenericAsyncTaskOps<String, Void, Lis
     private Context mContext;
 
     ConcurrentHashMap<String,List<Track>> mDownloadedTracks;
-    private MusicPresenter mMusicPresenter;
+    private TrackListPresenter mMusicPresenter;
     private int mPage;
     private int mCount;
     private String mKey;
 
-    public DownloadPopularOps(MusicPresenter musicPresenter, Context context,
-                              ConcurrentHashMap<String,List<Track>> downloadedTracks,int page, int count){
+    public DownloadPopularOps(TrackListPresenter musicPresenter, Context context,
+                              ConcurrentHashMap<String,List<Track>> downloadedTracks, int page, int count){
         mMusicPresenter=musicPresenter;
         mContext=context;
 
