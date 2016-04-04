@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -44,7 +44,15 @@
             android:visibility="invisible"
             android:layout_gravity="center_vertical"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+        <fragment android:name="zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment"
+            android:id="@+id/fragment_playback_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentBottom="true"
+            />
+
+    </RelativeLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

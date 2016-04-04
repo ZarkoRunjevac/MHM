@@ -62,8 +62,11 @@ public class LatestTacksFragment extends Fragment {
         for(String listName: MusicListActivity.LATEST_LIST_FOR_DOWNLOAD){
             layout.addView(createView(listName, trackList.get(listName)));
         }
-
-        m_Scroll.addView(layout,layoutParam);
+//        List<Track> all=trackList.get("all");
+//        for(Track track :all){
+//            getSoundCloudLink(track);
+//        }
+        m_Scroll.addView(layout, layoutParam);
         return m_Scroll;
     }
 
@@ -121,7 +124,7 @@ public class LatestTacksFragment extends Fragment {
                 Log.d(" ViewHolder", "onClick: ");
                 int position=getLayoutPosition();
                 Track track=mTracks.get(position);
-                getSoundCloudLink(track.getPosturl());
+               // getSoundCloudLink(track);
                 Utils.showToast(LatestTacksFragment.this.getActivity(),track.getPosturl());
             }
         }
@@ -136,61 +139,64 @@ public class LatestTacksFragment extends Fragment {
     }
 
     private  LinearLayout createView(final String listName, final List<Track> trackList){
-
-        LinearLayout.LayoutParams params = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
+        if(null!=trackList){
+            LinearLayout.LayoutParams params = new
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        LinearLayout.LayoutParams textViewParams = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        TextView listNameTextView = new TextView(getActivity());
-        listNameTextView.setText(listName);
-        listNameTextView.setLayoutParams(textViewParams);
-        listNameTextView.setTextSize(getActivity().getResources().getDimension(R.dimen.body_heading));
-        textViewParams.setMargins(16, 0, 0, 0);
-        layout.addView(listNameTextView);
 
-        final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,3));
+            LinearLayout.LayoutParams textViewParams = new
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        final ContentAdapter adapter=new ContentAdapter(shortList);
-        RecyclerView recyclerView=new RecyclerView(getActivity());
-        recyclerView.setLayoutParams(params);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        layout.addView(recyclerView);
+            TextView listNameTextView = new TextView(getActivity());
+            listNameTextView.setText(listName);
+            listNameTextView.setLayoutParams(textViewParams);
+            listNameTextView.setTextSize(getActivity().getResources().getDimension(R.dimen.body_heading));
+            textViewParams.setMargins(16, 0, 0, 0);
+            layout.addView(listNameTextView);
 
-       final Button btn = new Button(getActivity());
-        btn.setText("v");
-        btn.setLayoutParams(params);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
+            final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,3));
 
-                if (btn.getText().equals("v")) {
-                    btn.setText("SHOW ALL");
-                    int curSize = adapter.getItemCount();
-                    shortList.addAll(trackList.subList(3, trackList.size()));
+            final ContentAdapter adapter=new ContentAdapter(shortList);
+            RecyclerView recyclerView=new RecyclerView(getActivity());
+            recyclerView.setLayoutParams(params);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            layout.addView(recyclerView);
 
-                    adapter.notifyDataSetChanged();
+            final Button btn = new Button(getActivity());
+            btn.setText("v");
+            btn.setLayoutParams(params);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
-                } else {
-                    //strartnewactivity
-                }
-            }
-        });
 
-        layout.addView(btn);
+                    if (btn.getText().equals("v")) {
+                        btn.setText("SHOW ALL");
+                        int curSize = adapter.getItemCount();
+                        shortList.addAll(trackList.subList(3, trackList.size()));
+
+                        adapter.notifyDataSetChanged();
+                        Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
+                    } else {
+                        //strartnewactivity
+                    }
+                }
+            });
+
+            layout.addView(btn);
+            return layout;
+        }
         return layout;
     }
 
-    private void getSoundCloudLink(final String url){
+    private void getSoundCloudLink(final Track track){
 
 
 
@@ -198,15 +204,17 @@ public class LatestTacksFragment extends Fragment {
             @Override
             public void run() {
                 try{
-                    Document doc= Jsoup.connect(url).get();
+                    Document doc= Jsoup.connect(track.getPosturl()).get();
                     Elements media = doc.select("[src]");
 
                     for (Element src : media) {
-                        String link=src.attr("abs:src");
-                        if(link.contains("api.soundcloud")){
 
-                            Log.d("LatestTacksFragment", "run: "+ URLDecoder.decode(src.attr("abs:src")));
-                        }
+                        String link=src.attr("abs:src");
+                        Log.d("LatestTacksFragment", "run: Artist="+track.getArtist()+" "+ URLDecoder.decode(src.attr("abs:src")));
+//                        if(link.contains("api.soundcloud")){
+//
+//                            Log.d("LatestTacksFragment", "run: Artist="+track.getArtist()+" "+ URLDecoder.decode(src.attr("abs:src")));
+//                        }
 
 
                     }

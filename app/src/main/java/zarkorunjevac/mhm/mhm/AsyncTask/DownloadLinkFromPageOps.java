@@ -1,15 +1,6 @@
-package zarkorunjevac.mhm.mhm.AsyncTask;
-
-import android.util.Log;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+package zarkorunjevac.mhm.mhm.asynctask;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;

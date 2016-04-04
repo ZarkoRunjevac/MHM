@@ -43,6 +43,7 @@ public class DownloadLatestOps implements GenericAsyncTaskOps<String, Void, List
         mKey ="latest."+params[0];
         try{
             tracks=mMusicPresenter.getModel().downloadLatest(mContext,params[0],mPage,mCount);
+            Log.d(TAG, "doInBackground: download");
         }
         catch (IOException e){
             Log.d(TAG, "doInBackground: "+e.getLocalizedMessage());

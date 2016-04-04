@@ -31,6 +31,7 @@ import zarkorunjevac.mhm.mhm.model.pojo.Music;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.TrackListPresenter;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
+import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
@@ -43,6 +44,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     protected ViewPager mViewPager;
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
+    private PlaybackControlsFragment mControlsFragment;
     public static final List<String> LATEST_LIST_FOR_DOWNLOAD=Arrays.asList("all", "fresh", "remix", "noremix");
     public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
 
@@ -87,6 +89,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         //1. getPresenter().startProcessing();
 
          mTabs = (TabLayout) findViewById(R.id.tabs);
+        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_playback_controls);
 
 
     }
@@ -104,6 +108,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         adapter.addFragment(new PopularTracksFragment(), "Popular");
 
         viewPager.setAdapter(adapter);
+        getSupportFragmentManager().beginTransaction()
+                .show(mControlsFragment)
+                .commit();
     }
 
     static class Adapter extends FragmentPagerAdapter {

@@ -5,8 +5,8 @@ import android.content.Context;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadLinkFromPageAsyncTask;
-import zarkorunjevac.mhm.mhm.AsyncTask.DownloadLinkFromPageOps;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadLinkFromPageAsyncTask;
+import zarkorunjevac.mhm.mhm.asynctask.DownloadLinkFromPageOps;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericPresenter;
 import zarkorunjevac.mhm.mhm.model.TrackDownloadModel;

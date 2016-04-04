@@ -1,9 +1,8 @@
-package zarkorunjevac.mhm.mhm.AsyncTask;
+package zarkorunjevac.mhm.mhm.asynctask;
 
 import java.util.List;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTask;
-import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;
 
 /**
  * Created by zarkorunjevac on 03/04/16.
