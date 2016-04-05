@@ -1,15 +1,21 @@
 package zarkorunjevac.mhm.mhm.asynctask;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;
+import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
 
 /**
  * Created by zarkorunjevac on 03/04/16.
  */
-public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<String, Void, List<String>> {
+public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<Track, Void, String> {
 
     private TrackPresenter mTrackPresenter;
 
@@ -18,20 +24,59 @@ public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<String, Void
     }
 
     @Override
-    public List<String> doInBackground(String... params) {
-        String url=params[0];
+    public String doInBackground(Track... params) {
+        //String url=params[0];
+        Track track=params[0];
         List<String> links=null;
+        //String link=null;
         try{
-           links= mTrackPresenter.getModel().downloadLinksFromPage(url);
+           links= mTrackPresenter.getModel().downloadLinksFromPage(track.getPosturl());
 
         }catch (IOException e){
 
         }
-        return links;
+        //check for soundcloud
+        if(null!=links){
+            for (String link:links){
+                String id=getTrackId(link);
+                if(null!=id ){
+                    SoundCloudTrack soundCloudTrack;
+                    try {
+                        soundCloudTrack=mTrackPresenter.getModel().findMusicStreamLink(id);
+                        if(soundCloudTrack.getTitle().equals(track.getTitle())){
+                            return soundCloudTrack.getUri();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     @Override
-    public void onPostExecute(List<String> strings) {
-        mTrackPresenter.onProcessingComplete(strings);
+    public void onPostExecute(String link) {
+        mTrackPresenter.onTrackDownloadComplete(link);
+    }
+
+    private String getTrackId(String link){
+        String pattern="/tracks/(\\d+)";
+        Pattern r = Pattern.compile(pattern);
+        String trackLink=null;
+
+        Log.d("LatestTacksFragment", "run: " + link);
+        Matcher m = r.matcher(link);
+        while(m.find()){
+               Log.d("LatestTacksFragment", "run: "+m.group());
+               trackLink=m.group();
+        }
+        if(null!=trackLink){
+            String[] parts=trackLink.split(Pattern.quote("/"));
+
+            return parts[2];
+        }
+
+        return null;
     }
 }

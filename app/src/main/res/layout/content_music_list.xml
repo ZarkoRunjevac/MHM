@@ -35,14 +35,15 @@
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_below="@+id/appbar" />
         <ProgressBar
             android:id="@+id/progressBar_loading"
             style="@android:style/Widget.ProgressBar.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:layout_gravity="center_vertical"/>
+            android:layout_centerInParent="true"/>
 
         <fragment android:name="zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment"
             android:id="@+id/fragment_playback_controls"

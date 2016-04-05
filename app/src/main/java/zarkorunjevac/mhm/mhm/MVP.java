@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import zarkorunjevac.mhm.mhm.common.ContextView;
 import zarkorunjevac.mhm.mhm.common.ModelOps;
 import zarkorunjevac.mhm.mhm.common.PresenterOps;
-import zarkorunjevac.mhm.mhm.model.pojo.Music;
+import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
 
@@ -40,28 +40,12 @@ public interface MVP {
          */
         void dismissProgressBar();
 
-        /**
-         * Display the URLs provided by the user thus far.
-         */
-        void displayUrls();
-
-        /**
-         * Handle failure to download an image.
-         */
-        void reportDownloadFailure(Uri url,
-                                   boolean downloadsComplete);
-
-        /**
-         * Start the DisplayImagesActivity to display the results of
-         * the download to the user.
-         */
-
         void reportDownloadFailure(String listName);
-        void displayResults(Uri directoryPathname);
 
         void dispayResults(ConcurrentHashMap<String,List<Track>> trackLists);
 
-        void loadTracks(Music music);
+        void returnTrackLink(String link);
+
     }
 
     /**
@@ -95,7 +79,9 @@ public interface MVP {
     public interface ProvidedTrackListPresenterOps
             extends PresenterOps<MVP.RequiredViewOps> {
 
-        void startProcessing(List<String> latest, List<String> popular);
+        void startTrackListDownload(List<String> latest, List<String> popular);
+
+        void startTrackDownload(Track track);
 
     }
 
@@ -110,7 +96,8 @@ public interface MVP {
             extends ContextView {
 
 
-        void onProcessingComplete(String listName);
+        void onTrackListDownloadComplete(String listName);
+        void onTrackDownloadComplete(String link);
     }
 
     /**
@@ -150,31 +137,25 @@ public interface MVP {
     public interface ProvidedTrackListDownloadModelOps extends ModelOps<RequiredTrackListPresenterOps> {
 
         List<Track> downloadPopular(Context context, String mode,int page, int count) throws IOException;
+
         List<Track> downloadLatest(Context context, String sort,int page, int count) throws IOException;
+
+        List<String> downloadLinksFromPage(String url) throws IOException;
+
+        SoundCloudTrack findMusicStreamLink(String id) throws IOException;
     }
 
     public interface ProvidedMusicListActivityOps{
+
         HashMap<String,List<Track>> loadLatestLists( );
 
         HashMap<String,List<Track>> loadPopularLists();
+
+        void getStreamUrl(Track track);
+
+        String returnStreamUrl(String link);
     }
 
-    public interface RequiredTrackPresenterOps
-            extends ContextView {
 
-        void onProcessingComplete(List<String> urls);
-    }
-
-    public interface ProvidedTrackDownloadModelOps extends ModelOps<RequiredTrackPresenterOps>{
-        List<String> downloadLinksFromPage(String url) throws IOException;
-        Uri findMusicStremLink(Context context, Track track);
-    }
-
-    public interface ProvidedTrackPresenterOps
-            extends PresenterOps<MVP.RequiredViewOps> {
-
-        void startProcessing(String url);
-
-    }
 
 }

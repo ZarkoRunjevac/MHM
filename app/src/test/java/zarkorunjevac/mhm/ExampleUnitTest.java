@@ -1,11 +1,7 @@
 package zarkorunjevac.mhm;
 
-import android.util.Log;
-
 import org.junit.Test;
 import org.mockito.Mock;
-
-import zarkorunjevac.mhm.mhm.model.TrackListDownloadModel;
 
 import static org.junit.Assert.*;
 

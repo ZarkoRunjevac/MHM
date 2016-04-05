@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import zarkorunjevac.mhm.mhm.common.GenericAsyncTaskOps;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
-import zarkorunjevac.mhm.mhm.presenter.TrackListPresenter;
+import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
 
 /**
  * Created by zarkorunjevac on 26/03/16.
@@ -22,12 +22,12 @@ public class DownloadLatestOps implements GenericAsyncTaskOps<String, Void, List
     private Context mContext;
 
     ConcurrentHashMap<String,List<Track>> mDownloadedTracks;
-    private TrackListPresenter mMusicPresenter;
+    private TrackPresenter mMusicPresenter;
     private int mPage;
     private int mCount;
     private String mKey;
 
-    public DownloadLatestOps(TrackListPresenter musicPresenter, Context context,
+    public DownloadLatestOps(TrackPresenter musicPresenter, Context context,
                              ConcurrentHashMap<String,List<Track>> downloadedTracks, int page, int count){
         mMusicPresenter=musicPresenter;
         mContext=context;
@@ -57,7 +57,7 @@ public class DownloadLatestOps implements GenericAsyncTaskOps<String, Void, List
     public void onPostExecute(List<Track> tracks) {
 
         if(null!=tracks) mDownloadedTracks.put(mKey,tracks);
-        mMusicPresenter.onProcessingComplete(mKey);
+        mMusicPresenter.onTrackListDownloadComplete(mKey);
 
     }
 }

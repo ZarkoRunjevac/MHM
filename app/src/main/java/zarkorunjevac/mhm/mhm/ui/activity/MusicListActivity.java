@@ -1,6 +1,5 @@
 package zarkorunjevac.mhm.mhm.ui.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +9,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,17 +26,15 @@ import java.util.regex.Pattern;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
-import zarkorunjevac.mhm.mhm.common.Utils;
-import zarkorunjevac.mhm.mhm.model.pojo.Music;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
-import zarkorunjevac.mhm.mhm.presenter.TrackListPresenter;
+import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedTrackListPresenterOps,
-        TrackListPresenter>
+        TrackPresenter>
         implements MVP.RequiredViewOps,
         MVP.ProvidedMusicListActivityOps{
 
@@ -58,8 +56,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
 
         initializeViewFields();
-        super.onCreate(TrackListPresenter.class, this);
-        getPresenter().startProcessing(LATEST_LIST_FOR_DOWNLOAD,
+        super.onCreate(TrackPresenter.class, this);
+        getPresenter().startTrackListDownload(LATEST_LIST_FOR_DOWNLOAD,
                 POPULAR_LIST_FOR_DOWNLOAD);
 
     }
@@ -86,10 +84,10 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         // Set Tabs inside Toolbar
-        //1. getPresenter().startProcessing();
+        //1. getPresenter().startTrackListDownload();
 
          mTabs = (TabLayout) findViewById(R.id.tabs);
-        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
+         mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_playback_controls);
 
 
@@ -151,60 +149,14 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mLoadingProgressBar.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Make the ProgressBar invisible.
-     */
     @Override
     public void dismissProgressBar() {
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
     }
 
 
-    @Override
-    public void reportDownloadFailure(Uri url,
-                                      boolean downloadsComplete) {
-        Utils.showToast(this,
-                "image at "
-                        + url.toString()
-                        + " failed to download!");
 
-        // Remove the URL that failed from the UI.
-        removeUrl(url,
-                downloadsComplete);
 
-        if (downloadsComplete)
-            // Dismiss the progress bar.
-            mLoadingProgressBar.setVisibility(View.INVISIBLE);
-    }
-    /**
-     * Remove a URL that couldn't be downloaded.
-     */
-    private void removeUrl(Uri url,
-                           boolean downloadsComplete) {
-
-    }
-
-    /**
-     * Display the URLs provided by the user thus far.
-     */
-    @Override
-    public void displayUrls() {
-
-    }
-
-    /**
-     * Start the DisplayImagesActivity to display the results of the
-     * download to the user.
-     */
-    @Override
-    public void displayResults(Uri directoryPathname) {
-
-    }
-
-    @Override
-    public void loadTracks(Music music) {
-
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -234,7 +186,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     @Override
     public void dispayResults(ConcurrentHashMap<String, List<Track>> trackLists) {
-
+        Log.d(TAG, "dispayResults: trackLists.size="+trackLists.size());
         mLatestLists=new HashMap<String,List<Track>>();
         mPopularLists=new HashMap<String,List<Track>>();
         for(Map.Entry<String,List<Track>> list:trackLists.entrySet()){
@@ -253,13 +205,29 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
+    public void returnTrackLink(String link) {
+
+    }
+
+    @Override
     public HashMap<String, List<Track>> loadLatestLists() {
+        Log.d(TAG, "loadLatestLists:mLatestLists.size()= "+mLatestLists.size());
         return mLatestLists;
     }
 
     @Override
     public HashMap<String, List<Track>> loadPopularLists() {
         return mPopularLists;
+    }
+
+    @Override
+    public void getStreamUrl(Track track) {
+        getPresenter().startTrackDownload(track);
+    }
+
+    @Override
+    public String returnStreamUrl(String link) {
+        return null;
     }
 }
 

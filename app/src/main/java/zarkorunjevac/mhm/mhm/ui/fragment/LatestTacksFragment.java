@@ -126,6 +126,7 @@ public class LatestTacksFragment extends Fragment {
                 Track track=mTracks.get(position);
                // getSoundCloudLink(track);
                 Utils.showToast(LatestTacksFragment.this.getActivity(),track.getPosturl());
+                mMusicListActivityListener.getStreamUrl(track);
             }
         }
     }
