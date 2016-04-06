@@ -16,13 +16,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +23,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
@@ -37,10 +31,11 @@ import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
 /**
  * Created by zarko.runjevac on 3/21/2016.
  */
-public class LatestTacksFragment extends Fragment {
+public class LatestTracksFragment extends Fragment
+       implements MVP.ProvidedLatestTracksPresenterOps{
 
     private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
-    public LatestTacksFragment(){
+    public LatestTracksFragment(){
 
     }
 
@@ -70,6 +65,11 @@ public class LatestTacksFragment extends Fragment {
         return m_Scroll;
     }
 
+    @Override
+    public void onStreamLinkFound(String link) {
+        Utils.showToast(getActivity(), link);
+    }
+
 
     /**
      * Adapter to display recycler view.
@@ -94,8 +94,8 @@ public class LatestTacksFragment extends Fragment {
             TextView textView=holder.titleTextView;
             textView.setText(track.getTitle());
             holder.artistTextView.setText(track.getArtist());
-            Log.d("ContentAdapter", "onBindViewHolder: "+track.getThumbUrlMedium());
-            Picasso.with(LatestTacksFragment.this.getActivity())
+            Log.d("ContentAdapter", "onBindViewHolder: " + track.getThumbUrlMedium());
+            Picasso.with(LatestTracksFragment.this.getActivity())
                     .load(track.getThumbUrlMedium()).
                     into(holder.trackThumbnailImageView);
 
@@ -125,8 +125,9 @@ public class LatestTacksFragment extends Fragment {
                 int position=getLayoutPosition();
                 Track track=mTracks.get(position);
                // getSoundCloudLink(track);
-                Utils.showToast(LatestTacksFragment.this.getActivity(),track.getPosturl());
-                mMusicListActivityListener.getStreamUrl(track);
+                //Utils.showToast(LatestTracksFragment.this.getActivity(),track.getPosturl());
+                Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
+                mMusicListActivityListener.getStreamUrl(track, TrackListType.LATEST);
             }
         }
     }
@@ -196,50 +197,4 @@ public class LatestTacksFragment extends Fragment {
         }
         return layout;
     }
-
-    private void getSoundCloudLink(final Track track){
-
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    Document doc= Jsoup.connect(track.getPosturl()).get();
-                    Elements media = doc.select("[src]");
-
-                    for (Element src : media) {
-
-                        String link=src.attr("abs:src");
-                        Log.d("LatestTacksFragment", "run: Artist="+track.getArtist()+" "+ URLDecoder.decode(src.attr("abs:src")));
-//                        if(link.contains("api.soundcloud")){
-//
-//                            Log.d("LatestTacksFragment", "run: Artist="+track.getArtist()+" "+ URLDecoder.decode(src.attr("abs:src")));
-//                        }
-
-
-                    }
-//                    Element iframe=doc.select("iframe").first();
-//                    Log.d("LatestTacksFragment", "run: iframe+"+iframe);
-//                    String src=iframe.attr("src");
-//                    //Log.d("LatestTacksFragment", "run: "+src);
-//
-//                    //String pattern="/tracks/(\\d+)";
-//                    String pattern="/tracks/(\\d+)";
-//                    Pattern r = Pattern.compile(pattern);
-//                    String link= URLDecoder.decode(src, "UTF-8");
-//                    Log.d("LatestTacksFragment", "run: "+link);
-//                    Matcher m = r.matcher(link);
-//                    while(m.find()){
-//                        Log.d("LatestTacksFragment", "run: "+m.group());
-//                    }
-                }catch (IOException e){
-
-                }
-
-            }
-        }).start();
-    }
-
-
 }

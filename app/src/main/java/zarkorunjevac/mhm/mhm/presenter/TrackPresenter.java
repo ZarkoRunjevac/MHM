@@ -18,6 +18,7 @@ import zarkorunjevac.mhm.mhm.asynctask.DownloadLinkFromPageOps;
 import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularAsyncTask;
 import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularOps;
 import zarkorunjevac.mhm.mhm.common.GenericPresenter;
+import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.model.TrackModel;
 import zarkorunjevac.mhm.mhm.model.pojo.Music;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -34,6 +35,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private static final int TRACK_LIST_PAGE = 1;
     private static final int TRACK_LIST_COUNT = 100;
     public WeakReference<MVP.RequiredViewOps> mView;
+    private TrackListType mTrackListType;
 
     private int mNumListToHandle;
 
@@ -212,7 +214,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     }
 
     @Override
-    public void startTrackDownload(Track track) {
+    public void startTrackDownload(Track track,TrackListType trackListType) {
+        mTrackListType=trackListType;
         DownloadLinkFromPageOps downloadLinkFromPageOps=new DownloadLinkFromPageOps(this);
         DownloadLinkFromPageAsyncTask downloadLinkFromPageAsyncTask=new DownloadLinkFromPageAsyncTask(downloadLinkFromPageOps);
 
@@ -222,7 +225,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     @Override
     public void onTrackDownloadComplete(String link) {
             if(link!=null){
-                mView.get().returnTrackLink(link);
+                mView.get().onStreamLinkFound(link,mTrackListType);
             }
     }
 }

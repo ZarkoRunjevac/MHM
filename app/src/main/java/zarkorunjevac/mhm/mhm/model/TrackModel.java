@@ -99,9 +99,10 @@ public class TrackModel
         List<String> linksOnPage = new ArrayList<String>();
 
         Document doc = Jsoup.connect(url).get();
-        Elements media = doc.select("[src]");
+        Elements media_src = doc.select("[src]");
+        //Elements media_data_source=doc.select("")
 
-        for (Element src : media) {
+        for (Element src : media_src) {
             String link = URLDecoder.decode(src.attr("abs:src"), "UTF-8");
 
             if (link.contains("api.soundcloud")) {

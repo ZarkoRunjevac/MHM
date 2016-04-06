@@ -36,7 +36,7 @@ import retrofit.Retrofit;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.model.pojo.Blog;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
-import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
+import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setupViewPager(ViewPager viewPager, List<Blog> blogs) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        LatestTacksFragment latestTacksFragment =new LatestTacksFragment();
+        LatestTracksFragment latestTacksFragment =new LatestTracksFragment();
 
         adapter.addFragment(latestTacksFragment, "Latest");
         adapter.addFragment(new PopularTracksFragment(), "Popular");

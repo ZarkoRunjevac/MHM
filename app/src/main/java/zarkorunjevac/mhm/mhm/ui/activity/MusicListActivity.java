@@ -26,9 +26,10 @@ import java.util.regex.Pattern;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
+import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
-import zarkorunjevac.mhm.mhm.ui.fragment.LatestTacksFragment;
+import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
@@ -43,6 +44,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
     private PlaybackControlsFragment mControlsFragment;
+    private LatestTracksFragment mLatestTracksFragment;
+    private PopularTracksFragment mPopularTracksFragment;
+
     public static final List<String> LATEST_LIST_FOR_DOWNLOAD=Arrays.asList("all", "fresh", "remix", "noremix");
     public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
 
@@ -83,8 +87,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        // Set Tabs inside Toolbar
-        //1. getPresenter().startTrackListDownload();
+        mLatestTracksFragment=new LatestTracksFragment();
+        mPopularTracksFragment=new PopularTracksFragment();
 
          mTabs = (TabLayout) findViewById(R.id.tabs);
          mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
@@ -100,10 +104,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        LatestTacksFragment latestTacksFragment =new LatestTacksFragment();
-        //latestBlogsFragment.getBlogs(blogs);
-        adapter.addFragment(latestTacksFragment, "Latest");
-        adapter.addFragment(new PopularTracksFragment(), "Popular");
+
+        adapter.addFragment(mLatestTracksFragment, "Latest");
+        adapter.addFragment(mPopularTracksFragment, "Popular");
 
         viewPager.setAdapter(adapter);
         getSupportFragmentManager().beginTransaction()
@@ -205,7 +208,15 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
-    public void returnTrackLink(String link) {
+    public void onStreamLinkFound(String link, TrackListType trackListType) {
+        if(trackListType.equals(TrackListType.LATEST)){
+            MVP.ProvidedLatestTracksPresenterOps latestTracksPresenterOps=(MVP.ProvidedLatestTracksPresenterOps)mLatestTracksFragment;
+            latestTracksPresenterOps.onStreamLinkFound(link);
+        }else{
+            MVP.ProvidedPopularTracksPresenterOps popularTracksPresenterOps=(MVP.ProvidedPopularTracksPresenterOps)mPopularTracksFragment;
+            popularTracksPresenterOps.onStreamLinkFound(link);
+        }
+
 
     }
 
@@ -221,14 +232,11 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
-    public void getStreamUrl(Track track) {
-        getPresenter().startTrackDownload(track);
+    public void getStreamUrl(Track track,TrackListType trackListType) {
+        getPresenter().startTrackDownload(track,trackListType);
     }
 
-    @Override
-    public String returnStreamUrl(String link) {
-        return null;
-    }
+
 }
 
 
