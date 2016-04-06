@@ -49,6 +49,9 @@ public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<Track, Void,
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    catch (NullPointerException ex){
+                        return null;
+                    }
                 }
             }
         }
