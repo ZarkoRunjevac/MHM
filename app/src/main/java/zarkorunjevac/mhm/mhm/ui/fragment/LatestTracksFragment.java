@@ -1,14 +1,17 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -23,6 +26,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.OverlapDecoration;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -124,8 +128,12 @@ public class LatestTracksFragment extends Fragment
                 Log.d(" ViewHolder", "onClick: ");
                 int position=getLayoutPosition();
                 Track track=mTracks.get(position);
-               // getSoundCloudLink(track);
-                //Utils.showToast(LatestTracksFragment.this.getActivity(),track.getPosturl());
+                ObjectAnimator moveAnim = ObjectAnimator.ofFloat(trackThumbnailImageView, "Y", 300);
+                moveAnim.setDuration(2000);
+                moveAnim.setInterpolator(new BounceInterpolator());
+                moveAnim.start();
+
+
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
                 mMusicListActivityListener.getStreamUrl(track, TrackListType.LATEST);
             }
@@ -148,39 +156,25 @@ public class LatestTracksFragment extends Fragment
                     LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
 
-
-
-            LinearLayout.LayoutParams textViewParams = new
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            TextView listNameTextView = new TextView(getActivity());
-            listNameTextView.setText(listName);
-            listNameTextView.setLayoutParams(textViewParams);
-            listNameTextView.setTextSize(getActivity().getResources().getDimension(R.dimen.body_heading));
-            textViewParams.setMargins(16, 0, 0, 0);
+            TextView listNameTextView = makeTextView(listName);
             layout.addView(listNameTextView);
 
-            final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,3));
+            final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,6));
 
             final ContentAdapter adapter=new ContentAdapter(shortList);
-            RecyclerView recyclerView=new RecyclerView(getActivity());
-            recyclerView.setLayoutParams(params);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            RecyclerView recyclerView=makeRecyclerView(adapter);
+
             layout.addView(recyclerView);
 
-            final Button btn = new Button(getActivity());
-            btn.setText("v");
-            btn.setLayoutParams(params);
-            btn.setOnClickListener(new View.OnClickListener() {
+            final Button showMoreButton = makeButton();
+
+            showMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
 
-                    if (btn.getText().equals("v")) {
-                        btn.setText("SHOW ALL");
+                    if (showMoreButton.getText().equals("More ...")) {
+                        showMoreButton.setText("SHOW ALL");
                         int curSize = adapter.getItemCount();
                         shortList.addAll(trackList.subList(3, trackList.size()));
 
@@ -192,9 +186,56 @@ public class LatestTracksFragment extends Fragment
                 }
             });
 
-            layout.addView(btn);
+            layout.addView(showMoreButton);
             return layout;
         }
         return layout;
+    }
+
+    private Button makeButton(){
+
+        LinearLayout.LayoutParams params = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        Button moreButton=new Button(getActivity());
+
+        moreButton.setText("More ...");
+
+        moreButton.setLayoutParams(params);
+        moreButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+
+        moreButton.setBackgroundResource(0);
+        return moreButton;
+    }
+
+    private RecyclerView makeRecyclerView(ContentAdapter adapter){
+        LinearLayout.LayoutParams params = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        RecyclerView recyclerView=new RecyclerView(getActivity());
+        recyclerView.setLayoutParams(params);
+
+        recyclerView.setHasFixedSize(true);
+        OverlapDecoration overlapDecoration=new OverlapDecoration();
+        recyclerView.addItemDecoration(overlapDecoration);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setAdapter(adapter);
+        return recyclerView;
+    }
+
+    private TextView makeTextView(String listName){
+        LinearLayout.LayoutParams textViewParams = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        TextView listNameTextView = new TextView(getActivity());
+        listNameTextView.setText(listName);
+        listNameTextView.setLayoutParams(textViewParams);
+        listNameTextView.setTextSize(getActivity().getResources().getDimension(R.dimen.body_heading));
+        listNameTextView.setTextColor(getActivity().getResources().getColor(R.color.white));
+        textViewParams.setMargins(32, 16, 16, 16);
+
+        return listNameTextView;
     }
 }

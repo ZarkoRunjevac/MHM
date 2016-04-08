@@ -84,6 +84,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 

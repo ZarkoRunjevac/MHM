@@ -33,7 +33,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         MVP.RequiredTrackListPresenterOps {
 
     private static final int TRACK_LIST_PAGE = 1;
-    private static final int TRACK_LIST_COUNT = 100;
+    private static final int TRACK_LIST_COUNT = 12;
     public WeakReference<MVP.RequiredViewOps> mView;
     private TrackListType mTrackListType;
 

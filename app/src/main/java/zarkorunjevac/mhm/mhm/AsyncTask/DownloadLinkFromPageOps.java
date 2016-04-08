@@ -17,6 +17,9 @@ import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
  */
 public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<Track, Void, String> {
 
+    protected final static String TAG =
+            DownloadLinkFromPageOps.class.getSimpleName();
+
     private TrackPresenter mTrackPresenter;
 
     public DownloadLinkFromPageOps(TrackPresenter trackPresenter){
@@ -42,6 +45,7 @@ public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<Track, Void,
                 if(null!=id ){
                     SoundCloudTrack soundCloudTrack;
                     try {
+
                         soundCloudTrack=mTrackPresenter.getModel().findMusicStreamLink(id);
                         if(soundCloudTrack.getTitle().equals(track.getTitle()) || soundCloudTrack.getTitle().contains(track.getTitle())){
                             return soundCloudTrack.getUri();

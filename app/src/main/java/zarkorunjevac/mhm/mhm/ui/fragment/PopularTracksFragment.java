@@ -152,7 +152,7 @@ public class PopularTracksFragment extends Fragment implements MVP.ProvidedLates
             textViewParams.setMargins(16, 0, 0, 0);
             layout.addView(listNameTextView);
 
-            final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,3));
+            final List<Track> shortList=new ArrayList<Track>(trackList.subList(0,6));
 
             final ContentAdapter adapter=new ContentAdapter(shortList);
             RecyclerView recyclerView=new RecyclerView(getActivity());
@@ -163,8 +163,9 @@ public class PopularTracksFragment extends Fragment implements MVP.ProvidedLates
             layout.addView(recyclerView);
 
             final Button btn = new Button(getActivity());
-            btn.setText("v");
+           // btn.setText("tetet");
             btn.setLayoutParams(params);
+           // btn.setCompoundDrawables(getActivity().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_white_18dp),null,null,null);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
