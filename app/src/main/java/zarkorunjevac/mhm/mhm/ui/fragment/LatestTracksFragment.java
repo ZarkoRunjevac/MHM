@@ -216,8 +216,8 @@ public class LatestTracksFragment extends Fragment
         recyclerView.setLayoutParams(params);
 
         recyclerView.setHasFixedSize(true);
-        OverlapDecoration overlapDecoration=new OverlapDecoration();
-        recyclerView.addItemDecoration(overlapDecoration);
+//        OverlapDecoration overlapDecoration=new OverlapDecoration();
+//        recyclerView.addItemDecoration(overlapDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(adapter);
