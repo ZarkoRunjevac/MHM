@@ -1,6 +1,8 @@
 package zarkorunjevac.mhm.mhm.presenter;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
@@ -34,14 +36,17 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     private static final int TRACK_LIST_PAGE = 1;
     private static final int TRACK_LIST_COUNT = 12;
+
     public WeakReference<MVP.RequiredViewOps> mView;
+
     private TrackListType mTrackListType;
 
     private int mNumListToHandle;
 
     private int mNumListHandled;
 
-    private Music mMusic;
+    private MediaPlayer mMediaPlayer;
+
 
     private  ConcurrentHashMap<String,List<Track>> mDownloadedTracks;
 
@@ -52,6 +57,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     public void onCreate(MVP.RequiredViewOps view) {
         mView = new WeakReference<>(view);
         resetFields();
+        mMediaPlayer=new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         super.onCreate(TrackModel.class,
                 this);
     }

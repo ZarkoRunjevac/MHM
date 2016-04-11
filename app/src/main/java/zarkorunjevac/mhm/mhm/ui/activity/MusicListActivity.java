@@ -159,8 +159,23 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
 
+    @Override
+    public void displayPlaybackFragment() {
 
+        getSupportFragmentManager().beginTransaction()
+                .show(mControlsFragment)
+                .commit();
 
+    }
+
+    @Override
+    public void dismissPlaybackFragment() {
+
+        getSupportFragmentManager().beginTransaction()
+                .hide(mControlsFragment)
+                .commit();
+
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
