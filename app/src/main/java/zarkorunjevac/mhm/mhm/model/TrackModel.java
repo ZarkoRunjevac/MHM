@@ -3,10 +3,6 @@ package zarkorunjevac.mhm.mhm.model;
 import android.content.Context;
 import android.util.Log;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,7 +39,7 @@ public class TrackModel
 
     private HypemApiService mHypemApiService;
     private SoundCloudApiService mSoundCloudApiService;
-    private OkHttpClient okClient;
+
 
     /**
      * A WeakReference used to access methods in the Presenter layer.
@@ -57,18 +53,7 @@ public class TrackModel
                 new WeakReference<>(presenter);
 
         mHypemApiService =makeHypemService();
-         okClient = new OkHttpClient();
-        okClient.interceptors().add(new Interceptor() {
-            @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                Log.d("MainActivity", "intercept "+request.url().toString());
-                com.squareup.okhttp.Response response=chain.proceed(chain.request());
 
-                //Log.d("MainActivity","intercept "+ response.body().string());
-                return response;
-            }
-        });
 
         mSoundCloudApiService=makeSoundCloudService();
     }
@@ -137,7 +122,6 @@ public class TrackModel
     private SoundCloudApiService makeSoundCloudService(){
         Retrofit  soundcloudService = new Retrofit.Builder()
                 .baseUrl(BASE_URL_SOUNDCLOUD)
-                .client(okClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -1,7 +1,8 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
-import zarkorunjevac.mhm.mhm.common.OverlapDecoration;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -37,7 +37,8 @@ import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
  */
 public class LatestTracksFragment extends Fragment
        implements MVP.ProvidedLatestTracksPresenterOps{
-
+    protected final static String TAG =
+            LatestTracksFragment.class.getSimpleName();
     private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
     public LatestTracksFragment(){
 
@@ -71,7 +72,40 @@ public class LatestTracksFragment extends Fragment
 
     @Override
     public void onStreamLinkFound(String link) {
-        Utils.showToast(getActivity(), link);
+        if(link!=null){
+            Utils.showToast(getActivity(), link);
+           final MediaPlayer mediaPlayer=new MediaPlayer();
+
+            try {
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.pause();
+
+                        } else {
+                            Log.d(TAG, "onPrepared: ");
+                            mediaPlayer.start();
+
+                        }
+                    }
+                });
+
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                }
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setDataSource(link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
+                Log.d(TAG, "onStreamLinkFound: link= " + link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
+
+                mediaPlayer.prepareAsync();
+                //mediaPlayer.start();
+            }catch (IOException e){
+                Log.d(TAG, "onStreamLinkFound: e.getLocalizedMessage()="+e.getLocalizedMessage());
+            }
+        }
+
     }
 
 
@@ -128,10 +162,10 @@ public class LatestTracksFragment extends Fragment
                 Log.d(" ViewHolder", "onClick: ");
                 int position=getLayoutPosition();
                 Track track=mTracks.get(position);
-                ObjectAnimator moveAnim = ObjectAnimator.ofFloat(trackThumbnailImageView, "Y", 300);
-                moveAnim.setDuration(2000);
-                moveAnim.setInterpolator(new BounceInterpolator());
-                moveAnim.start();
+//                ObjectAnimator moveAnim = ObjectAnimator.ofFloat(trackThumbnailImageView, "Y", 300);
+//                moveAnim.setDuration(2000);
+//                moveAnim.setInterpolator(new BounceInterpolator());
+//                moveAnim.start();
 
 
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());

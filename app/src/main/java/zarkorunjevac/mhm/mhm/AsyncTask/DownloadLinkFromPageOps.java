@@ -48,7 +48,7 @@ public class DownloadLinkFromPageOps implements GenericAsyncTaskOps<Track, Void,
 
                         soundCloudTrack=mTrackPresenter.getModel().findMusicStreamLink(id);
                         if(soundCloudTrack.getTitle().equals(track.getTitle()) || soundCloudTrack.getTitle().contains(track.getTitle())){
-                            return soundCloudTrack.getUri();
+                            return soundCloudTrack.getStreamUrl();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
