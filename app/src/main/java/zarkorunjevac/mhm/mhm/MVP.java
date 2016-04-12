@@ -50,7 +50,9 @@ public interface MVP {
 
         void dismissPlaybackFragment();
 
+        void displayPlayButton();
 
+        void displayPauseButton();
 
     }
 
@@ -62,6 +64,10 @@ public interface MVP {
         void startTrackListDownload(List<String> latest, List<String> popular);
 
         void startTrackDownload(Track track,TrackListType trackListType);
+
+        void togglePlayPause();
+
+        void playMedia(Track track);
 
     }
 
@@ -86,6 +92,8 @@ public interface MVP {
         List<String> downloadLinksFromPage(String url) throws IOException;
 
         SoundCloudTrack findMusicStreamLink(String id) throws IOException;
+
+
     }
 
     public interface ProvidedMusicListActivityOps{
@@ -96,6 +104,10 @@ public interface MVP {
 
         void getStreamUrl(Track track, TrackListType trackListType);
 
+        Track loadTrack();
+
+        void togglePlayPause();
+
 
     }
 
@@ -105,5 +117,11 @@ public interface MVP {
 
     public interface ProvidedPopularTracksPresenterOps extends FragmentOps{
         void onStreamLinkFound(String link);
+    }
+
+    public interface  ProvidedPlaybackControlsFragmentOps{
+        void displayPlayButton();
+
+        void displayPauseButton();
     }
 }

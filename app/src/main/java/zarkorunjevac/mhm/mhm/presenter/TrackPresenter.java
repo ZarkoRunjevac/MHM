@@ -4,7 +4,9 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.View;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +61,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         resetFields();
         mMediaPlayer=new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setOnPreparedListener(mMediaOnPreparedListener);
+        mMediaPlayer.setOnCompletionListener(mMediaPlayerCompletionListener);
         super.onCreate(TrackModel.class,
                 this);
     }
@@ -82,6 +86,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
                     "Not all lists have finished downloading");
         }
         Log.d(TAG, "onConfigurationChange: mDownloadedTracks.size()="+mDownloadedTracks.size());
+
         mView.get().dispayResults(mDownloadedTracks);
 
 
@@ -188,6 +193,15 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
         getModel().onDestroy(isChangingConfigurations);
 
+        if (!isChangingConfigurations) {
+            if (null != mMediaPlayer) {
+                if (mMediaPlayer.isPlaying()) mMediaPlayer.stop();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+        }
+
+
     }
 
 
@@ -235,4 +249,46 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
                 mView.get().onStreamLinkFound(link,mTrackListType);
             }
     }
+
+    @Override
+    public void togglePlayPause() {
+        if(mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+            mView.get().displayPauseButton();
+        }else {
+            mMediaPlayer.start();
+            mView.get().displayPlayButton();
+        }
+    }
+
+    @Override
+    public void playMedia(Track track) {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
+        }
+
+        try {
+            mMediaPlayer.setDataSource(track.getStreamUrl() );
+            mMediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private MediaPlayer.OnCompletionListener mMediaPlayerCompletionListener=new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            mView.get().displayPlayButton();
+        }
+    };
+
+    private MediaPlayer.OnPreparedListener mMediaOnPreparedListener=new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            togglePlayPause();
+        }
+    };
+
+
 }

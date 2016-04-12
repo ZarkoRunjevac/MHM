@@ -252,7 +252,25 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         getPresenter().startTrackDownload(track,trackListType);
     }
 
+    @Override
+    public void displayPlayButton() {
 
+    }
+
+    @Override
+    public Track loadTrack() {
+        return null;
+    }
+
+    @Override
+    public void displayPauseButton() {
+
+    }
+
+    @Override
+    public void togglePlayPause() {
+        getPresenter().togglePlayPause();
+    }
 }
 
 

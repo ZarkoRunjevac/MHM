@@ -49,6 +49,8 @@ public class LatestTracksFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
+
 
         LinearLayout.LayoutParams layoutParam = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -56,17 +58,17 @@ public class LatestTracksFragment extends Fragment
 
         ScrollView m_Scroll = new ScrollView(getActivity());
 
-        HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
+
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
+
         for(String listName: MusicListActivity.LATEST_LIST_FOR_DOWNLOAD){
             layout.addView(createView(listName, trackList.get(listName)));
         }
-//        List<Track> all=trackList.get("all");
-//        for(Track track :all){
-//            getSoundCloudLink(track);
-//        }
+
         m_Scroll.addView(layout, layoutParam);
+
+
         return m_Scroll;
     }
 

@@ -63,6 +63,16 @@ public class Track {
     @Expose
     private String itunesLink;
 
+
+    private String mStreamUrl;
+
+    public String getStreamUrl() {
+        return mStreamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        this.mStreamUrl = streamUrl;
+    }
     /**
      *
      * @return

@@ -21,4 +21,8 @@
     <string name="play_pause">play or pause</string>
     <string name="skip_next">skip to next</string>
     <string name="skip_prev">skip to previous</string>
+
+    <string name="title_activity_full_screen_player">FullScreenPlayerActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

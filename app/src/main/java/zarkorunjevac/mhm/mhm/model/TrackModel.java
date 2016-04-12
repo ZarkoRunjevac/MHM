@@ -18,6 +18,7 @@ import retrofit.Call;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
@@ -104,7 +105,7 @@ public class TrackModel
     public SoundCloudTrack findMusicStreamLink(String id) throws IOException{
 
         SoundCloudTrack track;
-        Call<SoundCloudTrack> call=mSoundCloudApiService.getTrack(id,"469a173c79c40c02c653a7255c503cd2");
+        Call<SoundCloudTrack> call=mSoundCloudApiService.getTrack(id, Config.CLIENT_ID);
         track=call.execute().body();
         return track;
     }
