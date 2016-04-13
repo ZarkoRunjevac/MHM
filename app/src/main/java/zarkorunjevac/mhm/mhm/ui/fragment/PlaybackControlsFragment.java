@@ -35,7 +35,9 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_playback_controls, container, false);
-        mTrack=mMusicListActivityListener.loadTrack();
+//        if(null!=mMusicListActivityListener) {
+//            mTrack = mMusicListActivityListener.loadTrack();
+//        }
 
         mPlayPause = (ImageButton) rootView.findViewById(R.id.play_pause);
         mPlayPause.setEnabled(true);

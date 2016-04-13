@@ -67,6 +67,19 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_playback_controls);
+
+        if (mControlsFragment == null) {
+            throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
+        }
+
+       hidePlaybackControls();
+    }
+
+    @Override
     protected void onDestroy() {
         // Destroy the presenter layer, passing in whether this is
         // triggered by a runtime configuration or not.
@@ -92,8 +105,6 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mPopularTracksFragment=new PopularTracksFragment();
 
          mTabs = (TabLayout) findViewById(R.id.tabs);
-         mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_playback_controls);
 
 
     }
@@ -224,14 +235,20 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
-    public void onStreamLinkFound(String link, TrackListType trackListType) {
+    public void onStreamLinkFound(Track track, TrackListType trackListType) {
         if(trackListType.equals(TrackListType.LATEST)){
             MVP.ProvidedLatestTracksPresenterOps latestTracksPresenterOps=(MVP.ProvidedLatestTracksPresenterOps)mLatestTracksFragment;
-            latestTracksPresenterOps.onStreamLinkFound(link);
+            latestTracksPresenterOps.onStreamLinkFound(track);
+            Log.d(TAG, "onStreamLinkFound: link="+track.getStreamUrl());
+
+            getPresenter().playMedia(track);
+            //show playback fragment
+            showPlaybackFragment();
         }else{
             MVP.ProvidedPopularTracksPresenterOps popularTracksPresenterOps=(MVP.ProvidedPopularTracksPresenterOps)mPopularTracksFragment;
-            popularTracksPresenterOps.onStreamLinkFound(link);
+            popularTracksPresenterOps.onStreamLinkFound(track);
         }
+
 
 
     }
@@ -259,7 +276,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     @Override
     public Track loadTrack() {
-        return null;
+        return getPresenter().getSelectedTrack();
     }
 
     @Override
@@ -270,6 +287,22 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     @Override
     public void togglePlayPause() {
         getPresenter().togglePlayPause();
+    }
+
+    private void showPlaybackFragment(){
+        getSupportFragmentManager().beginTransaction()
+
+//                .setCustomAnimations(R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
+//                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
+                .show(mControlsFragment)
+                .commit();
+    }
+
+    protected void hidePlaybackControls() {
+        Log.d(TAG, "hidePlaybackControls");
+        getSupportFragmentManager().beginTransaction()
+                .hide(mControlsFragment)
+                .commit();
     }
 }
 

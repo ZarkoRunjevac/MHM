@@ -44,7 +44,7 @@ public interface MVP {
 
         void dispayResults(ConcurrentHashMap<String,List<Track>> trackLists);
 
-        void onStreamLinkFound(String link, TrackListType trackListType);
+        void onStreamLinkFound(Track track, TrackListType trackListType);
 
         void displayPlaybackFragment();
 
@@ -68,6 +68,8 @@ public interface MVP {
         void togglePlayPause();
 
         void playMedia(Track track);
+
+        Track getSelectedTrack();
 
     }
 
@@ -112,11 +114,11 @@ public interface MVP {
     }
 
     public interface ProvidedLatestTracksPresenterOps extends FragmentOps{
-        void onStreamLinkFound(String link);
+        void onStreamLinkFound(Track track);
     }
 
     public interface ProvidedPopularTracksPresenterOps extends FragmentOps{
-        void onStreamLinkFound(String link);
+        void onStreamLinkFound(Track track);
     }
 
     public interface  ProvidedPlaybackControlsFragmentOps{

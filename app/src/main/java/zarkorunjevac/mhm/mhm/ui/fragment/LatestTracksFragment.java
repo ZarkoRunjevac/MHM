@@ -73,40 +73,43 @@ public class LatestTracksFragment extends Fragment
     }
 
     @Override
-    public void onStreamLinkFound(String link) {
-        if(link!=null){
-            Utils.showToast(getActivity(), link);
-           final MediaPlayer mediaPlayer=new MediaPlayer();
+    public void onStreamLinkFound(Track track) {
+        if(track.getStreamUrl()!=null){
+            Utils.showToast(getActivity(), track.getStreamUrl());
+//           final MediaPlayer mediaPlayer=new MediaPlayer();
+//
+//            try {
+//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mp) {
+//                        if (mediaPlayer.isPlaying()) {
+//                            mediaPlayer.pause();
+//
+//                        } else {
+//                            Log.d(TAG, "onPrepared: ");
+//                            mediaPlayer.start();
+//
+//                        }
+//                    }
+//                });
+//
+//                if (mediaPlayer.isPlaying()) {
+//                    mediaPlayer.stop();
+//                    mediaPlayer.reset();
+//                }
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                mediaPlayer.setDataSource(link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
+//                Log.d(TAG, "onStreamLinkFound: link= " + link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
 
-            try {
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.pause();
-
-                        } else {
-                            Log.d(TAG, "onPrepared: ");
-                            mediaPlayer.start();
-
-                        }
-                    }
-                });
-
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                }
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.setDataSource(link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
-                Log.d(TAG, "onStreamLinkFound: link= " + link + "?client_id=" + "469a173c79c40c02c653a7255c503cd2");
-
-                mediaPlayer.prepareAsync();
+//                mediaPlayer.prepareAsync();
                 //mediaPlayer.start();
-            }catch (IOException e){
-                Log.d(TAG, "onStreamLinkFound: e.getLocalizedMessage()="+e.getLocalizedMessage());
-            }
+//            }catch (IOException e){
+//                Log.d(TAG, "onStreamLinkFound: e.getLocalizedMessage()="+e.getLocalizedMessage());
+//            }
+        }else {
+            Log.d(TAG, "onStreamLinkFound: link not found");
         }
+
 
     }
 

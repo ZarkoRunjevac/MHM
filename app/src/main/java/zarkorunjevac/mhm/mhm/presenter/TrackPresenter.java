@@ -21,6 +21,7 @@ import zarkorunjevac.mhm.mhm.asynctask.DownloadLinkFromPageAsyncTask;
 import zarkorunjevac.mhm.mhm.asynctask.DownloadLinkFromPageOps;
 import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularAsyncTask;
 import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularOps;
+import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.GenericPresenter;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.model.TrackModel;
@@ -48,6 +49,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private int mNumListHandled;
 
     private MediaPlayer mMediaPlayer;
+
+    private Track mSelectedTrack;
 
 
     private  ConcurrentHashMap<String,List<Track>> mDownloadedTracks;
@@ -236,6 +239,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     @Override
     public void startTrackDownload(Track track,TrackListType trackListType) {
+        mSelectedTrack=track;
         mTrackListType=trackListType;
         DownloadLinkFromPageOps downloadLinkFromPageOps=new DownloadLinkFromPageOps(this);
         DownloadLinkFromPageAsyncTask downloadLinkFromPageAsyncTask=new DownloadLinkFromPageAsyncTask(downloadLinkFromPageOps);
@@ -246,7 +250,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     @Override
     public void onTrackDownloadComplete(String link) {
             if(link!=null){
-                mView.get().onStreamLinkFound(link,mTrackListType);
+                mSelectedTrack.setStreamUrl(link+ "?client_id=" + Config.CLIENT_ID);
+                mView.get().onStreamLinkFound(mSelectedTrack,mTrackListType);
             }
     }
 
@@ -274,6 +279,11 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Track getSelectedTrack() {
+        return mSelectedTrack;
     }
 
     private MediaPlayer.OnCompletionListener mMediaPlayerCompletionListener=new MediaPlayer.OnCompletionListener() {

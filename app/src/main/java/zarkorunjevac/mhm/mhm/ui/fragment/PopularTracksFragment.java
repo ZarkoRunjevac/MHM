@@ -61,8 +61,8 @@ public class PopularTracksFragment extends Fragment implements MVP.ProvidedLates
     }
 
     @Override
-    public void onStreamLinkFound(String link) {
-        Utils.showToast(getActivity(), link);
+    public void onStreamLinkFound(Track track) {
+        Utils.showToast(getActivity(), track.getStreamUrl());
     }
 
     public  class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
