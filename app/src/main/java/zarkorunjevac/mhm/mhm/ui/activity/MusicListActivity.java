@@ -47,6 +47,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     private LatestTracksFragment mLatestTracksFragment;
     private PopularTracksFragment mPopularTracksFragment;
 
+
     public static final List<String> LATEST_LIST_FOR_DOWNLOAD=Arrays.asList("all", "fresh", "remix", "noremix");
     public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
 
@@ -61,22 +62,26 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         initializeViewFields();
         super.onCreate(TrackPresenter.class, this);
+
+
         getPresenter().startTrackListDownload(LATEST_LIST_FOR_DOWNLOAD,
                 POPULAR_LIST_FOR_DOWNLOAD);
+
+//        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.fragment_playback_controls);
+//
+//        if (mControlsFragment == null) {
+//            throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
+//        }
+//
+//        hidePlaybackControls();
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_playback_controls);
 
-        if (mControlsFragment == null) {
-            throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
-        }
-
-       hidePlaybackControls();
     }
 
     @Override
@@ -121,9 +126,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         adapter.addFragment(mPopularTracksFragment, "Popular");
 
         viewPager.setAdapter(adapter);
-        getSupportFragmentManager().beginTransaction()
-                .show(mControlsFragment)
-                .commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .show(mControlsFragment)
+//                .commit();
     }
 
     static class Adapter extends FragmentPagerAdapter {
@@ -238,12 +243,17 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     public void onStreamLinkFound(Track track, TrackListType trackListType) {
         if(trackListType.equals(TrackListType.LATEST)){
             MVP.ProvidedLatestTracksPresenterOps latestTracksPresenterOps=(MVP.ProvidedLatestTracksPresenterOps)mLatestTracksFragment;
+//            MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
+//            mControlsFragment.initializeViewFields(track);
+//           mControlsFragment.displayPlayButton();
+//            showPlaybackFragment();
             latestTracksPresenterOps.onStreamLinkFound(track);
+
             Log.d(TAG, "onStreamLinkFound: link="+track.getStreamUrl());
 
             getPresenter().playMedia(track);
             //show playback fragment
-            showPlaybackFragment();
+           // showPlaybackFragment();
         }else{
             MVP.ProvidedPopularTracksPresenterOps popularTracksPresenterOps=(MVP.ProvidedPopularTracksPresenterOps)mPopularTracksFragment;
             popularTracksPresenterOps.onStreamLinkFound(track);
@@ -265,13 +275,14 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
-    public void getStreamUrl(Track track,TrackListType trackListType) {
+    public void tryToPlayTrack(Track track, TrackListType trackListType) {
         getPresenter().startTrackDownload(track,trackListType);
     }
 
     @Override
     public void displayPlayButton() {
-
+//        MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
+//        providedPlaybackControlsFragmentOps.displayPauseButton();
     }
 
     @Override
@@ -281,7 +292,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     @Override
     public void displayPauseButton() {
-
+//        MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
+//        providedPlaybackControlsFragmentOps.displayPlayButton();
     }
 
     @Override
@@ -290,6 +302,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     private void showPlaybackFragment(){
+        Log.d(TAG, "showPlaybackFragment: ");
         getSupportFragmentManager().beginTransaction()
 
 //                .setCustomAnimations(R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
@@ -299,6 +312,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     protected void hidePlaybackControls() {
+
         Log.d(TAG, "hidePlaybackControls");
         getSupportFragmentManager().beginTransaction()
                 .hide(mControlsFragment)

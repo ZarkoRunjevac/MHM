@@ -4,6 +4,7 @@ package zarkorunjevac.mhm.mhm.common;
  * Created by zarko.runjevac on 3/24/2016.
  */
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 /**
@@ -168,4 +169,11 @@ public abstract class GenericActivity<RequiredViewOps,
     public Context getApplicationContext() {
         return super.getApplicationContext();
     }
+
+    @Override
+    public FragmentManager getSupportFragmentManager(){
+        return super.getSupportFragmentManager();
+    }
+
+
 }

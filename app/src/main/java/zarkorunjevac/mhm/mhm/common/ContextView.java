@@ -4,6 +4,7 @@ package zarkorunjevac.mhm.mhm.common;
  * Created by zarko.runjevac on 3/24/2016.
  */
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 
 /**
  * Defines methods for obtaining Contexts used by all views in the
@@ -19,4 +20,7 @@ public interface ContextView {
      * Get the Application Context.
      */
     Context getApplicationContext();
+
+    FragmentManager getSupportFragmentManager();
+
 }

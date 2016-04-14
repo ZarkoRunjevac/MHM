@@ -1,8 +1,6 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +24,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.OverlapDecoration;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -171,10 +169,8 @@ public class LatestTracksFragment extends Fragment
 //                moveAnim.setDuration(2000);
 //                moveAnim.setInterpolator(new BounceInterpolator());
 //                moveAnim.start();
-
-
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
-                mMusicListActivityListener.getStreamUrl(track, TrackListType.LATEST);
+                mMusicListActivityListener.tryToPlayTrack(track, TrackListType.LATEST);
             }
         }
     }
@@ -255,8 +251,8 @@ public class LatestTracksFragment extends Fragment
         recyclerView.setLayoutParams(params);
 
         recyclerView.setHasFixedSize(true);
-//        OverlapDecoration overlapDecoration=new OverlapDecoration();
-//        recyclerView.addItemDecoration(overlapDecoration);
+       OverlapDecoration overlapDecoration=new OverlapDecoration();
+        recyclerView.addItemDecoration(overlapDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(adapter);

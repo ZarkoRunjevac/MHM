@@ -118,7 +118,7 @@ public class PopularTracksFragment extends Fragment implements MVP.ProvidedLates
                 // getSoundCloudLink(track);
                 //Utils.showToast(LatestTracksFragment.this.getActivity(),track.getPosturl());
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
-                mMusicListActivityListener.getStreamUrl(track, TrackListType.LATEST);
+                mMusicListActivityListener.tryToPlayTrack(track, TrackListType.LATEST);
             }
         }
     }

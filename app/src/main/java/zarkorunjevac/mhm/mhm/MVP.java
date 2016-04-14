@@ -54,6 +54,8 @@ public interface MVP {
 
         void displayPauseButton();
 
+
+
     }
 
 
@@ -104,7 +106,7 @@ public interface MVP {
 
         HashMap<String,List<Track>> loadPopularLists();
 
-        void getStreamUrl(Track track, TrackListType trackListType);
+        void tryToPlayTrack(Track track, TrackListType trackListType);
 
         Track loadTrack();
 
@@ -125,5 +127,7 @@ public interface MVP {
         void displayPlayButton();
 
         void displayPauseButton();
+
+        void initializeViewFields(Track track);
     }
 }

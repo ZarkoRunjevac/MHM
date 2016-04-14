@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -35,9 +37,7 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_playback_controls, container, false);
-//        if(null!=mMusicListActivityListener) {
-//            mTrack = mMusicListActivityListener.loadTrack();
-//        }
+
 
         mPlayPause = (ImageButton) rootView.findViewById(R.id.play_pause);
         mPlayPause.setEnabled(true);
@@ -79,5 +79,15 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public void displayPauseButton() {
         mPlayPause.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_pause_black_36dp));
+    }
+
+    @Override
+    public void initializeViewFields(Track track) {
+        mTitle.setText(track.getTitle());
+        mSubtitle.setText(track.getArtist());
+
+        Picasso.with(PlaybackControlsFragment.this.getActivity())
+                .load(track.getThumbUrlMedium()).
+                into(mAlbumArt);
     }
 }
