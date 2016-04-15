@@ -94,6 +94,10 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
         mView.get().dispayResults(mDownloadedTracks);
 
+        if(mMediaPlayer.isPlaying()){
+            showPlaybackFragment();
+        }
+
 
     }
 
