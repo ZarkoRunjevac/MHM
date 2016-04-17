@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:layout_marginLeft="@dimen/md_keylines"
-        android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/track_thumbnail"
         android:text="@string/item_title"
         android:textAppearance="?attr/textAppearanceListItem"

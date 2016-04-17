@@ -238,8 +238,8 @@ public class LatestTracksFragment extends Fragment
 
         moreButton.setLayoutParams(params);
         moreButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-        moreButton.setBackgroundResource(0);
+        moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        //moreButton.setBackgroundResource(0);
         return moreButton;
     }
 
@@ -251,8 +251,8 @@ public class LatestTracksFragment extends Fragment
         recyclerView.setLayoutParams(params);
 
         recyclerView.setHasFixedSize(true);
-       OverlapDecoration overlapDecoration=new OverlapDecoration();
-        recyclerView.addItemDecoration(overlapDecoration);
+//       OverlapDecoration overlapDecoration=new OverlapDecoration();
+//        recyclerView.addItemDecoration(overlapDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(adapter);

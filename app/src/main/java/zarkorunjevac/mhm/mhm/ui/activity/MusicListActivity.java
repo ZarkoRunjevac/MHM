@@ -100,7 +100,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mLoadingProgressBar =
                 (ProgressBar) findViewById(R.id.progressBar_loading);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
