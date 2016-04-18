@@ -33,6 +33,8 @@ public class PlaybackControlsFragment extends Fragment
     private ImageView mAlbumArt;
     private String mArtUrl;
     private Track mTrack;
+
+    private Context mContext;
     private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
     @Nullable
     @Override
@@ -67,27 +69,30 @@ public class PlaybackControlsFragment extends Fragment
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
+        mContext=context;
+        super.onAttach(mContext);
         if(context instanceof MVP.ProvidedMusicListActivityOps){
-            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)context;
+            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)mContext;
         }
     }
 
     @Override
     public void displayPlayButton() {
         if(mPlayPause!=null)
-        mPlayPause.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
+        mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
     }
 
     @Override
     public void displayPauseButton() {
         if(mPlayPause!=null)
-        mPlayPause.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_pause_black_36dp));
+        mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_pause_black_36dp));
     }
 
     @Override
     public void initializeViewFields(Track track) {
+        Log.d(TAG, "initializeViewFields: mTitle="+track.getTitle());
         mTitle.setText(track.getTitle());
+        Log.d(TAG, "initializeViewFields: mSubTitle="+track.getArtist());
         mSubtitle.setText(track.getArtist());
 
         Picasso.with(PlaybackControlsFragment.this.getActivity())

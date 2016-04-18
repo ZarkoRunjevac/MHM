@@ -4,6 +4,7 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -19,42 +20,44 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:minHeight="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
 
-                app:titleTextAppearance="@style/Toolbar.TitleText"
-                android:background="?attr/colorPrimary">
-            </android.support.v7.widget.Toolbar>
+                android:minHeight="?attr/actionBarSize"
+                app:titleTextAppearance="@style/Toolbar.TitleText"></android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </android.support.design.widget.AppBarLayout>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/appbar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_below="@+id/appbar" />
+            android:layout_above="@+id/fragment_playback_controls" />
+
+        <fragment
+            android:id="@+id/fragment_playback_controls"
+            android:name="zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
         <ProgressBar
             android:id="@+id/progressBar_loading"
             style="@android:style/Widget.ProgressBar.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:layout_centerInParent="true"/>
-
-        <fragment android:name="zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment"
-            android:id="@+id/fragment_playback_controls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_alignParentBottom="true"
-            />
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
 
     </RelativeLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

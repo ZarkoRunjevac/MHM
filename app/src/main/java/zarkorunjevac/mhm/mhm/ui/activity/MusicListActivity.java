@@ -109,7 +109,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mLatestTracksFragment=new LatestTracksFragment();
         mPopularTracksFragment=new PopularTracksFragment();
 
-         mTabs = (TabLayout) findViewById(R.id.tabs);
+        mTabs = (TabLayout) findViewById(R.id.tabs);
 
 
     }
@@ -235,9 +235,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
             Log.d(TAG, "onStreamLinkFound: link="+track.getStreamUrl());
 
-           //getPresenter().playMedia(track);
+            //getPresenter().playMedia(track);
             //show playback fragment
-           // showPlaybackFragment();
+            // showPlaybackFragment();
         }else{
             MVP.ProvidedPopularTracksPresenterOps popularTracksPresenterOps=(MVP.ProvidedPopularTracksPresenterOps)mPopularTracksFragment;
             popularTracksPresenterOps.onStreamLinkFound(track);

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
-import zarkorunjevac.mhm.mhm.common.OverlapDecoration;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -50,10 +50,10 @@ public class LatestTracksFragment extends Fragment
         HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
 
 
-        LinearLayout.LayoutParams layoutParam = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT );
-
+       RelativeLayout.LayoutParams layoutParam = new
+               RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+               RelativeLayout.LayoutParams.WRAP_CONTENT );
+        layoutParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         ScrollView m_Scroll = new ScrollView(getActivity());
 
 
@@ -185,6 +185,7 @@ public class LatestTracksFragment extends Fragment
 
     private  LinearLayout createView(final String listName, final List<Track> trackList){
         LinearLayout layout = new LinearLayout(getActivity());
+
         layout.setOrientation(LinearLayout.VERTICAL);
         if(null!=trackList){
             LinearLayout.LayoutParams params = new
@@ -230,23 +231,26 @@ public class LatestTracksFragment extends Fragment
     private Button makeButton(){
 
         LinearLayout.LayoutParams params = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         Button moreButton=new Button(getActivity());
-
+        params.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
+       // params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         moreButton.setText("More ...");
 
         moreButton.setLayoutParams(params);
         moreButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-        //moreButton.setBackgroundResource(0);
+        //moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent));
+        moreButton.setTextColor(getActivity().getResources().getColor(R.color.colorAccent));
+        moreButton.setBackgroundResource(0);
         return moreButton;
     }
 
     private RecyclerView makeRecyclerView(ContentAdapter adapter){
-        LinearLayout.LayoutParams params = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new
+                RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
         RecyclerView recyclerView=new RecyclerView(getActivity());
         recyclerView.setLayoutParams(params);
 

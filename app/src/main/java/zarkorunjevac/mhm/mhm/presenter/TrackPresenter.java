@@ -97,11 +97,17 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
         mView.get().dispayResults(mDownloadedTracks);
 
-        if(mMediaPlayer.isPlaying()){
+        if(mMediaPlayer!=null){
             Log.d(TAG, "onConfigurationChange: mMediaPlayer.isPlaying()");
             initializePlaybackControlsFragment();
             mControlsFragment.initializeViewFields(mSelectedTrack);
             showPlaybackFragment();
+            if(mMediaPlayer.isPlaying()){
+                mControlsFragment.displayPlayButton();
+            }else{
+                mControlsFragment.displayPauseButton();
+            }
+
         }
 
 
@@ -279,11 +285,11 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
            // mView.get().displayPauseButton();
-           // mControlsFragment.displayPauseButton();
+            mControlsFragment.displayPauseButton();
         } else {
             mMediaPlayer.start();
             //mView.get().displayPlayButton();
-         //  mControlsFragment.displayPlayButton();
+          mControlsFragment.displayPlayButton();
         }
     }
 
@@ -336,7 +342,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private void initializePlaybackControlsFragment() {
         mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_playback_controls);
-//        mControlsFragment.setRetainInstance(true);
+
         if (mControlsFragment == null) {
             throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
         }
