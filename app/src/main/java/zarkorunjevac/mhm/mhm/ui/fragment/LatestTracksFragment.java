@@ -1,6 +1,7 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
+import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
@@ -155,7 +157,9 @@ public class LatestTracksFragment extends Fragment
             public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
                 super(inflater.inflate(R.layout.item_list, parent, false));
                 titleTextView=(TextView)itemView.findViewById(R.id.track_title);
+                titleTextView.setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(getActivity()));
                 artistTextView=(TextView)itemView.findViewById(R.id.track_artist);
+                artistTextView.setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(getActivity()));
                 trackThumbnailImageView=(CircleImageView)itemView.findViewById(R.id.track_thumbnail);
                 itemView.setOnClickListener(this);
             }
@@ -209,7 +213,7 @@ public class LatestTracksFragment extends Fragment
                 public void onClick(View v) {
                     Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
 
-                    if (showMoreButton.getText().equals("More ...")) {
+                    if (showMoreButton.getText().equals("More...")) {
                         showMoreButton.setText("SHOW ALL");
                         int curSize = adapter.getItemCount();
                         shortList.addAll(trackList.subList(3, trackList.size()));
@@ -236,13 +240,14 @@ public class LatestTracksFragment extends Fragment
         Button moreButton=new Button(getActivity());
         params.gravity=Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL;
        // params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        moreButton.setText("More ...");
+        moreButton.setText("More...");
+        moreButton.setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(getActivity()));
 
         moreButton.setLayoutParams(params);
         moreButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        //moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent));
-        moreButton.setTextColor(getActivity().getResources().getColor(R.color.colorAccent));
-        moreButton.setBackgroundResource(0);
+        moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent));
+        moreButton.setTextColor(getActivity().getResources().getColor(R.color.white));
+       // moreButton.setBackgroundResource(0);
         return moreButton;
     }
 
@@ -269,6 +274,7 @@ public class LatestTracksFragment extends Fragment
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         TextView listNameTextView = new TextView(getActivity());
+        listNameTextView.setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(getActivity()));
         listNameTextView.setText(listName);
         listNameTextView.setLayoutParams(textViewParams);
         listNameTextView.setTextSize(getActivity().getResources().getDimension(R.dimen.body_heading));

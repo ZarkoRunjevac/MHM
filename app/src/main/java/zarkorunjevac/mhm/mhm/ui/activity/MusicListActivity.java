@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
+import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
@@ -102,7 +104,10 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(this));
+        toolbarTitle.setTextSize(getResources().getDimension(R.dimen.toolbar_title));
+        toolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
