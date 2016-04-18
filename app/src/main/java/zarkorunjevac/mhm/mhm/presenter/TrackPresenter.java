@@ -25,6 +25,7 @@ import zarkorunjevac.mhm.mhm.asynctask.DownloadPopularOps;
 import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.GenericPresenter;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
+import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.TrackModel;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
@@ -71,6 +72,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         initializePlaybackControlsFragment();
         super.onCreate(TrackModel.class,
                 this);
+
+        hidePlaybackControls();
     }
 
     @Override
@@ -95,6 +98,9 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         mView.get().dispayResults(mDownloadedTracks);
 
         if(mMediaPlayer.isPlaying()){
+            Log.d(TAG, "onConfigurationChange: mMediaPlayer.isPlaying()");
+            initializePlaybackControlsFragment();
+            mControlsFragment.initializeViewFields(mSelectedTrack);
             showPlaybackFragment();
         }
 
@@ -173,11 +179,11 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     public void onTrackListDownloadComplete(String listName) {
 
         ++mNumListHandled;
-        Log.d(TAG, "onTrackListDownloadComplete: mNumListToHandle=" + mNumListToHandle);
-        Log.d(TAG, "onTrackListDownloadComplete: mNumListHandled=" + mNumListHandled);
+//       Log.d(TAG, "onTrackListDownloadComplete: mNumListToHandle=" + mNumListToHandle);
+//        Log.d(TAG, "onTrackListDownloadComplete: mNumListHandled=" + mNumListHandled);
         if (mDownloadedTracks.get(listName) == null) {
             // TODO add this string to string.xml
-            Log.d(TAG, "onTrackListDownloadComplete: listname=" + listName);
+//            Log.d(TAG, "onTrackListDownloadComplete: listname=" + listName);
             mView.get().reportDownloadFailure(listName);
 
         }
@@ -192,7 +198,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
             // Initialize state for the next run.
             resetFields();
-            Log.d(TAG, "tryToDisplayLists: mDownloadedTracks.size()=" + mDownloadedTracks.size());
+//            Log.d(TAG, "tryToDisplayLists: mDownloadedTracks.size()=" + mDownloadedTracks.size());
             mView.get().dispayResults(mDownloadedTracks);
         }
     }
@@ -258,8 +264,11 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
             mSelectedTrack.setStreamUrl(link + "?client_id=" + Config.CLIENT_ID);
             MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
             mControlsFragment.initializeViewFields(mSelectedTrack);
-            mControlsFragment.displayPlayButton();
+            Utils.showToast(getActivityContext(),mSelectedTrack.getStreamUrl());
+
             showPlaybackFragment();
+            playMedia(mSelectedTrack);
+            //mControlsFragment.displayPlayButton();
 
             mView.get().onStreamLinkFound(mSelectedTrack, mTrackListType);
         }
@@ -270,11 +279,11 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
            // mView.get().displayPauseButton();
-            mControlsFragment.displayPauseButton();
+           // mControlsFragment.displayPauseButton();
         } else {
             mMediaPlayer.start();
             //mView.get().displayPlayButton();
-            mControlsFragment.displayPlayButton();
+         //  mControlsFragment.displayPlayButton();
         }
     }
 
@@ -304,7 +313,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private MediaPlayer.OnCompletionListener mMediaPlayerCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-            mView.get().displayPlayButton();
+           // mView.get().displayPlayButton();
+            mControlsFragment.displayPlayButton();
         }
     };
 
@@ -326,12 +336,12 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private void initializePlaybackControlsFragment() {
         mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_playback_controls);
-
+//        mControlsFragment.setRetainInstance(true);
         if (mControlsFragment == null) {
             throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
         }
 
-        hidePlaybackControls();
+
     }
 
 

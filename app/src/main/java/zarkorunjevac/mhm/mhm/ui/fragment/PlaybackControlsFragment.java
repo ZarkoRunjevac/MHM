@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_playback_controls, container, false);
-
+        Log.d(TAG, "onCreateView: start ");
 
         mPlayPause = (ImageButton) rootView.findViewById(R.id.play_pause);
         mPlayPause.setEnabled(true);
@@ -53,6 +54,7 @@ public class PlaybackControlsFragment extends Fragment
                 /// start FullScreenActivity
             }
         });
+        Log.d(TAG, "onCreateView: end  ");
         return rootView;
     }
 
@@ -73,11 +75,13 @@ public class PlaybackControlsFragment extends Fragment
 
     @Override
     public void displayPlayButton() {
+        if(mPlayPause!=null)
         mPlayPause.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
     }
 
     @Override
     public void displayPauseButton() {
+        if(mPlayPause!=null)
         mPlayPause.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_pause_black_36dp));
     }
 

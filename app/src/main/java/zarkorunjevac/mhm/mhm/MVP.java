@@ -46,13 +46,10 @@ public interface MVP {
 
         void onStreamLinkFound(Track track, TrackListType trackListType);
 
-        void displayPlaybackFragment();
 
-        void dismissPlaybackFragment();
+//        void displayPlayButton();
 
-        void displayPlayButton();
-
-        void displayPauseButton();
+//        void displayPauseButton();
 
 
 

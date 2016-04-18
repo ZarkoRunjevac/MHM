@@ -100,7 +100,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         mLoadingProgressBar =
                 (ProgressBar) findViewById(R.id.progressBar_loading);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
@@ -175,23 +175,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
 
-    @Override
-    public void displayPlaybackFragment() {
 
-        getSupportFragmentManager().beginTransaction()
-                .show(mControlsFragment)
-                .commit();
-
-    }
-
-    @Override
-    public void dismissPlaybackFragment() {
-
-        getSupportFragmentManager().beginTransaction()
-                .hide(mControlsFragment)
-                .commit();
-
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -247,11 +231,11 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 //            mControlsFragment.initializeViewFields(track);
 //           mControlsFragment.displayPlayButton();
 //            showPlaybackFragment();
-            latestTracksPresenterOps.onStreamLinkFound(track);
+//            latestTracksPresenterOps.onStreamLinkFound(track);
 
             Log.d(TAG, "onStreamLinkFound: link="+track.getStreamUrl());
 
-            getPresenter().playMedia(track);
+           //getPresenter().playMedia(track);
             //show playback fragment
            // showPlaybackFragment();
         }else{
@@ -279,22 +263,13 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         getPresenter().startTrackDownload(track,trackListType);
     }
 
-    @Override
-    public void displayPlayButton() {
-//        MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
-//        providedPlaybackControlsFragmentOps.displayPauseButton();
-    }
 
     @Override
     public Track loadTrack() {
         return getPresenter().getSelectedTrack();
     }
 
-    @Override
-    public void displayPauseButton() {
-//        MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
-//        providedPlaybackControlsFragmentOps.displayPlayButton();
-    }
+
 
     @Override
     public void togglePlayPause() {
