@@ -2,11 +2,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorPrimary">#36223B</item>
         <!-- Light Indigo -->
         <item name="colorPrimaryDark">#3949AB</item>
         <!-- Dark Indigo -->
-        <item name="colorAccent">#00B0FF</item>
+        <item name="colorAccent">#E91E64</item>
         <!-- Blue -->
     </style>
 
@@ -24,6 +24,12 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+
     </style>
 
 </resources>

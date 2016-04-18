@@ -18,6 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
     android:padding="@dimen/playback_controls_padding">
     <ImageView
         android:id="@+id/album_art"
@@ -82,5 +83,5 @@
 
         android:contentDescription="@string/play_pause"
         android:tintMode="src_in"
-        android:tint="@color/bt_accent"/>
+        android:tint="@color/colorAccent"/>
 </RelativeLayout>
