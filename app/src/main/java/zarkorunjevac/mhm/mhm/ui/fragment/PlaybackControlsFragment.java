@@ -79,13 +79,13 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public void displayPlayButton() {
         if(mPlayPause!=null)
-        mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
+            mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
     }
 
     @Override
     public void displayPauseButton() {
         if(mPlayPause!=null)
-        mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_pause_black_36dp));
+         mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_pause));
     }
 
     @Override

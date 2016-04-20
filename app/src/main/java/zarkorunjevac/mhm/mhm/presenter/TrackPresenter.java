@@ -285,11 +285,12 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
            // mView.get().displayPauseButton();
-            mControlsFragment.displayPauseButton();
+            mControlsFragment.displayPlayButton();
+
         } else {
             mMediaPlayer.start();
             //mView.get().displayPlayButton();
-          mControlsFragment.displayPlayButton();
+            mControlsFragment.displayPauseButton();
         }
     }
 
@@ -298,6 +299,10 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
             mMediaPlayer.reset();
+            if(null!=mControlsFragment){
+                mControlsFragment.displayPauseButton();
+            }
+
         }
 
         try {
@@ -320,7 +325,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
            // mView.get().displayPlayButton();
-            mControlsFragment.displayPlayButton();
+            mControlsFragment.displayPauseButton();
         }
     };
 

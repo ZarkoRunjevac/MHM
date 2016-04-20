@@ -1,7 +1,7 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,6 +41,11 @@ public class LatestTracksFragment extends Fragment
     protected final static String TAG =
             LatestTracksFragment.class.getSimpleName();
     private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
+
+    private Context mContext;
+    private CircleImageView mLoadingCircularImageView;
+    private RelativeLayout mLayout;
+
     public LatestTracksFragment(){
 
     }
@@ -49,7 +55,7 @@ public class LatestTracksFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
+       HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadLatestLists();
 
 
        RelativeLayout.LayoutParams layoutParam = new
@@ -58,14 +64,13 @@ public class LatestTracksFragment extends Fragment
         layoutParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         ScrollView m_Scroll = new ScrollView(getActivity());
 
-
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
 
         for(String listName: MusicListActivity.LATEST_LIST_FOR_DOWNLOAD){
             layout.addView(createView(listName, trackList.get(listName)));
         }
-
+        layout.addView(makeLoadingImageView());
         m_Scroll.addView(layout, layoutParam);
 
 
@@ -142,6 +147,8 @@ public class LatestTracksFragment extends Fragment
                     .load(track.getThumbUrlMedium()).
                     into(holder.trackThumbnailImageView);
 
+
+
         }
         @Override
         public int getItemCount() {
@@ -169,10 +176,15 @@ public class LatestTracksFragment extends Fragment
                 Log.d(" ViewHolder", "onClick: ");
                 int position=getLayoutPosition();
                 Track track=mTracks.get(position);
-//                ObjectAnimator moveAnim = ObjectAnimator.ofFloat(trackThumbnailImageView, "Y", 300);
-//                moveAnim.setDuration(2000);
-//                moveAnim.setInterpolator(new BounceInterpolator());
-//                moveAnim.start();
+                CircleImageView loadingImageView=new CircleImageView(mContext);
+                loadingImageView.setImageDrawable(trackThumbnailImageView.getDrawable());
+               //makeLoadingImageView(loadingImageView);
+                mLoadingCircularImageView.setImageDrawable(trackThumbnailImageView.getDrawable());
+                mLayout.setVisibility(LinearLayout.VISIBLE);
+                ObjectAnimator moveAnim = ObjectAnimator.ofFloat(mLoadingCircularImageView, "Y", 300);
+                moveAnim.setDuration(2000);
+                moveAnim.setInterpolator(new BounceInterpolator());
+                moveAnim.start();
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
                 mMusicListActivityListener.tryToPlayTrack(track, TrackListType.LATEST);
             }
@@ -181,11 +193,14 @@ public class LatestTracksFragment extends Fragment
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof MVP.ProvidedMusicListActivityOps)  {
-            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)context;
+        mContext=context;
+        super.onAttach(mContext);
+        if(mContext instanceof MVP.ProvidedMusicListActivityOps)  {
+            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)mContext;
         }
     }
+
+
 
     private  LinearLayout createView(final String listName, final List<Track> trackList){
         LinearLayout layout = new LinearLayout(getActivity());
@@ -230,6 +245,29 @@ public class LatestTracksFragment extends Fragment
             return layout;
         }
         return layout;
+    }
+
+    private RelativeLayout makeLoadingImageView(){
+        RelativeLayout layout = new RelativeLayout(getActivity());
+
+        //layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setVisibility(LinearLayout.INVISIBLE);
+        CircleImageView circleImageView=new CircleImageView(mContext);
+        RelativeLayout.LayoutParams params = new
+                RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        //params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL|RelativeLayout.CENTER_VERTICAL);
+
+        layout.addView(circleImageView);
+        layout.addView(makeButton());
+        //((ViewGroup) getView()).addView(circleImageView);
+        mLoadingCircularImageView=circleImageView;
+        mLoadingCircularImageView.setLayoutParams(params);
+        layout.setLayoutParams(params);
+        mLayout=layout;
+        return mLayout;
+
     }
 
     private Button makeButton(){
@@ -283,4 +321,6 @@ public class LatestTracksFragment extends Fragment
 
         return listNameTextView;
     }
+
+
 }
