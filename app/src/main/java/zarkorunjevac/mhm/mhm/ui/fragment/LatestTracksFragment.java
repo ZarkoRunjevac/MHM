@@ -44,7 +44,7 @@ public class LatestTracksFragment extends Fragment
 
     private Context mContext;
     private CircleImageView mLoadingCircularImageView;
-    private RelativeLayout mLayout;
+    private LinearLayout mLayout;
 
     public LatestTracksFragment(){
 
@@ -247,17 +247,18 @@ public class LatestTracksFragment extends Fragment
         return layout;
     }
 
-    private RelativeLayout makeLoadingImageView(){
-        RelativeLayout layout = new RelativeLayout(getActivity());
+    private LinearLayout makeLoadingImageView(){
+        LinearLayout layout = new LinearLayout(getActivity());
 
-        //layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setVisibility(LinearLayout.INVISIBLE);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        layout.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL);
+        layout.setVisibility(LinearLayout.VISIBLE);
         CircleImageView circleImageView=new CircleImageView(mContext);
-        RelativeLayout.LayoutParams params = new
-                RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         //params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL|RelativeLayout.CENTER_VERTICAL);
+        //params.addRule(RelativeLayout.CENTER_HORIZONTAL|RelativeLayout.CENTER_VERTICAL);
 
         layout.addView(circleImageView);
         layout.addView(makeButton());
@@ -283,7 +284,8 @@ public class LatestTracksFragment extends Fragment
 
         moreButton.setLayoutParams(params);
         moreButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent));
+       // moreButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent));
+        moreButton.setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.green_button));
         moreButton.setTextColor(getActivity().getResources().getColor(R.color.white));
        // moreButton.setBackgroundResource(0);
         return moreButton;

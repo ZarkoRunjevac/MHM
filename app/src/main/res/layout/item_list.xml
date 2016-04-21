@@ -19,8 +19,9 @@
         android:id="@+id/track_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
+        android:maxLines="1"
         android:layout_marginLeft="@dimen/md_keylines"
+        android:layout_marginTop="@dimen/list_item_margin_top"
         android:layout_toRightOf="@+id/track_thumbnail"
         android:text="@string/item_title"
         android:textAppearance="?attr/textAppearanceListItem"
@@ -31,14 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/track_title"
-        android:fontFamily="sans-serif"
+        android:maxLines="1"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_toRightOf="@+id/track_thumbnail"
-        android:textColor="@color/medium_grey"
+        android:textColor="@color/list_artist_grey"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="@string/item_desc"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="@dimen/list_body" />
+
+        android:textSize="@dimen/track_artist" />
 
 </RelativeLayout>

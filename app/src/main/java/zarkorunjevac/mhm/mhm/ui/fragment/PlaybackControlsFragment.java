@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -30,7 +31,7 @@ public class PlaybackControlsFragment extends Fragment
     private TextView mTitle;
     private TextView mSubtitle;
     private TextView mExtraInfo;
-    private ImageView mAlbumArt;
+    private CircleImageView mAlbumArt;
     private String mArtUrl;
     private Track mTrack;
 
@@ -45,11 +46,12 @@ public class PlaybackControlsFragment extends Fragment
         mPlayPause = (ImageButton) rootView.findViewById(R.id.play_pause);
         mPlayPause.setEnabled(true);
         mPlayPause.setOnClickListener(mButtonListener);
+        mPlayPause.setBackgroundResource(0);
 
         mTitle = (TextView) rootView.findViewById(R.id.title);
         mSubtitle = (TextView) rootView.findViewById(R.id.artist);
         mExtraInfo = (TextView) rootView.findViewById(R.id.extra_info);
-        mAlbumArt = (ImageView) rootView.findViewById(R.id.album_art);
+        mAlbumArt = (CircleImageView) rootView.findViewById(R.id.album_art);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +81,7 @@ public class PlaybackControlsFragment extends Fragment
     @Override
     public void displayPlayButton() {
         if(mPlayPause!=null)
-            mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play_arrow_black_36dp));
+            mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play));
     }
 
     @Override
