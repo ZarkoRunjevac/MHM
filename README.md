@@ -3,4 +3,4 @@ Hype Machine Client for Android
 
 This is the Hype Machine Client od Android platform.
 
-Architecture is based on MVP pattern used in POSA 15 Courser Course.
+Architecture is based on MVP pattern used in POSA 15 Coursra Course.
