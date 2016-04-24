@@ -5,4 +5,5 @@ This is the Hype Machine Client od Android platform.
 
 Architecture is based on MVP pattern used in POSA 15 Coursera Course.
 
-![]({{site.baseurl}}/https://dl.dropboxusercontent.com/s/9nlbcq7pbcvsksz/mhm.png?dl=0)
+
+![alt tag](https://dl.dropboxusercontent.com/s/9nlbcq7pbcvsksz/mhm.png?dl=0)
