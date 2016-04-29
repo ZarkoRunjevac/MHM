@@ -10,6 +10,7 @@
     <color name="button_grey">#757575</color>
     <color name="bt_accent">#00B8D4</color>
     <color name="list_artist_grey">#D8D8D8</color>
+    <color name="list_body_color">#19111B</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>
