@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
@@ -34,6 +35,7 @@ import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
+import zarkorunjevac.mhm.mhm.ui.fragment.TrackListFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedTrackListPresenterOps,
@@ -46,12 +48,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
     private PlaybackControlsFragment mControlsFragment;
-    private LatestTracksFragment mLatestTracksFragment;
-    private PopularTracksFragment mPopularTracksFragment;
+    private TrackListFragment mLatestTracksFragment;
+    private TrackListFragment mPopularTracksFragment;
 
-
-    public static final List<String> LATEST_LIST_FOR_DOWNLOAD=Arrays.asList("all", "fresh", "remix", "noremix");
-    public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
 
     private HashMap<String,List<Track>> mPopularLists=new HashMap<String,List<Track>>();
     private HashMap<String,List<Track>> mLatestLists=new HashMap<String,List<Track>>();
@@ -66,17 +65,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         super.onCreate(TrackPresenter.class, this);
 
 
-        getPresenter().startTrackListDownload(LATEST_LIST_FOR_DOWNLOAD,
-                POPULAR_LIST_FOR_DOWNLOAD);
+        getPresenter().startTrackListDownload(Config.LATEST_LIST_FOR_DOWNLOAD,
+                Config.POPULAR_LIST_FOR_DOWNLOAD);
 
-//        mControlsFragment = (PlaybackControlsFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.fragment_playback_controls);
-//
-//        if (mControlsFragment == null) {
-//            throw new IllegalStateException("Mising fragment with id 'controls'. Cannot continue.");
-//        }
-//
-//        hidePlaybackControls();
 
     }
 
@@ -111,8 +102,11 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        mLatestTracksFragment=new LatestTracksFragment();
-        mPopularTracksFragment=new PopularTracksFragment();
+        mLatestTracksFragment=new TrackListFragment();
+        mLatestTracksFragment.setArguments(makeFragmentBundle("latest"));
+
+        mPopularTracksFragment=new TrackListFragment();
+        mPopularTracksFragment.setArguments(makeFragmentBundle("popular"));
 
         mTabs = (TabLayout) findViewById(R.id.tabs);
 
@@ -131,9 +125,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         adapter.addFragment(mPopularTracksFragment, "Popular");
 
         viewPager.setAdapter(adapter);
-//        getSupportFragmentManager().beginTransaction()
-//                .show(mControlsFragment)
-//                .commit();
+
     }
 
     static class Adapter extends FragmentPagerAdapter {
@@ -166,9 +158,6 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
 
-
-
-
     @Override
     public void displayProgressBar() {
         mLoadingProgressBar.setVisibility(View.VISIBLE);
@@ -178,8 +167,6 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     public void dismissProgressBar() {
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
     }
-
-
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -230,26 +217,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     @Override
     public void onStreamLinkFound(Track track, TrackListType trackListType) {
-        if(trackListType.equals(TrackListType.LATEST)){
-            MVP.ProvidedLatestTracksPresenterOps latestTracksPresenterOps=(MVP.ProvidedLatestTracksPresenterOps)mLatestTracksFragment;
-//            MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
-//            mControlsFragment.initializeViewFields(track);
-//           mControlsFragment.displayPlayButton();
-//            showPlaybackFragment();
-//            latestTracksPresenterOps.onStreamLinkFound(track);
-
-            Log.d(TAG, "onStreamLinkFound: link="+track.getStreamUrl());
-
-            //getPresenter().playMedia(track);
-            //show playback fragment
-            // showPlaybackFragment();
-        }else{
-            MVP.ProvidedPopularTracksPresenterOps popularTracksPresenterOps=(MVP.ProvidedPopularTracksPresenterOps)mPopularTracksFragment;
-            popularTracksPresenterOps.onStreamLinkFound(track);
-        }
-
-
-
+      //no-op
     }
 
     @Override
@@ -281,22 +249,28 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         getPresenter().togglePlayPause();
     }
 
-    private void showPlaybackFragment(){
-        Log.d(TAG, "showPlaybackFragment: ");
-        getSupportFragmentManager().beginTransaction()
+//    private void showPlaybackFragment(){
+//        Log.d(TAG, "showPlaybackFragment: ");
+//        getSupportFragmentManager().beginTransaction()
+//
+////                .setCustomAnimations(R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
+////                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
+//                .show(mControlsFragment)
+//                .commit();
+//    }
+//
+//    protected void hidePlaybackControls() {
+//
+//        Log.d(TAG, "hidePlaybackControls");
+//        getSupportFragmentManager().beginTransaction()
+//                .hide(mControlsFragment)
+//                .commit();
+//    }
 
-//                .setCustomAnimations(R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
-//                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
-                .show(mControlsFragment)
-                .commit();
-    }
-
-    protected void hidePlaybackControls() {
-
-        Log.d(TAG, "hidePlaybackControls");
-        getSupportFragmentManager().beginTransaction()
-                .hide(mControlsFragment)
-                .commit();
+    private Bundle makeFragmentBundle(String listType){
+        Bundle args=new Bundle();
+        args.putString("listType",listType);
+        return args;
     }
 }
 

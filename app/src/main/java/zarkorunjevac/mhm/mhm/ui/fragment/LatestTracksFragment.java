@@ -27,6 +27,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
 import zarkorunjevac.mhm.mhm.common.Utils;
@@ -67,7 +68,7 @@ public class LatestTracksFragment extends Fragment
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        for(String listName: MusicListActivity.LATEST_LIST_FOR_DOWNLOAD){
+        for(String listName: Config.LATEST_LIST_FOR_DOWNLOAD){
             layout.addView(createView(listName, trackList.get(listName)));
         }
         layout.addView(makeLoadingImageView());

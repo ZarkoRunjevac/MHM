@@ -92,13 +92,16 @@ public class PlaybackControlsFragment extends Fragment
 
     @Override
     public void initializeViewFields(Track track) {
-        Log.d(TAG, "initializeViewFields: mTitle="+track.getTitle());
-        mTitle.setText(track.getTitle());
-        Log.d(TAG, "initializeViewFields: mSubTitle="+track.getArtist());
-        mSubtitle.setText(track.getArtist());
 
-        Picasso.with(PlaybackControlsFragment.this.getActivity())
-                .load(track.getThumbUrlMedium()).
-                into(mAlbumArt);
+            Log.d(TAG, "initializeViewFields: mTitle="+track.getTitle());
+            mTitle.setText(track.getTitle());
+            Log.d(TAG, "initializeViewFields: mSubTitle="+track.getArtist());
+            mSubtitle.setText(track.getArtist());
+
+            Picasso.with(mContext)
+                    .load(track.getThumbUrlMedium()).
+                    into(mAlbumArt);
+
+
     }
 }

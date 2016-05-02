@@ -23,6 +23,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
@@ -51,7 +52,7 @@ public class PopularTracksFragment extends Fragment implements MVP.ProvidedLates
         HashMap<String,List<Track>> trackList=mMusicListActivityListener.loadPopularLists();
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
-        for(String listName: MusicListActivity.POPULAR_LIST_FOR_DOWNLOAD){
+        for(String listName: Config.POPULAR_LIST_FOR_DOWNLOAD){
             layout.addView(createView(listName, trackList.get(listName)));
         }
 

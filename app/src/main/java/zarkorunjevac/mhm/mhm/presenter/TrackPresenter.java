@@ -68,7 +68,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         mView = new WeakReference<>(view);
         resetFields();
 
-        initializeMediaPlayer();
+        //initializeMediaPlayer();
         initializePlaybackControlsFragment();
         super.onCreate(TrackModel.class,
                 this);
@@ -268,6 +268,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     public void onTrackDownloadComplete(String link) {
         if (link != null) {
             mSelectedTrack.setStreamUrl(link + "?client_id=" + Config.CLIENT_ID);
+            initializeMediaPlayer();
             MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
             mControlsFragment.initializeViewFields(mSelectedTrack);
             Utils.showToast(getActivityContext(),mSelectedTrack.getStreamUrl());

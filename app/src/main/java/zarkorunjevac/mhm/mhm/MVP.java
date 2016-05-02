@@ -110,6 +110,8 @@ public interface MVP {
         void togglePlayPause();
 
 
+
+
     }
 
     public interface ProvidedLatestTracksPresenterOps extends FragmentOps{
