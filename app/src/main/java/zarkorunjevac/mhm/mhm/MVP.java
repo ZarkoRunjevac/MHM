@@ -30,28 +30,14 @@ public interface MVP {
      */
     public interface RequiredViewOps
             extends ContextView {
-        /**
-         * Make the ProgressBar visible.
-         */
+
         void displayProgressBar();
 
-        /**
-         * Make the ProgressBar invisible.
-         */
         void dismissProgressBar();
 
         void reportDownloadFailure(String listName);
 
         void dispayResults(ConcurrentHashMap<String,List<Track>> trackLists);
-
-        void onStreamLinkFound(Track track, TrackListType trackListType);
-
-
-//        void displayPlayButton();
-
-//        void displayPauseButton();
-
-
 
     }
 
@@ -62,13 +48,21 @@ public interface MVP {
 
         void startTrackListDownload(List<String> latest, List<String> popular);
 
-        void startTrackDownload(Track track,TrackListType trackListType);
+        void startTrackDownload(Track track);
 
         void togglePlayPause();
 
         void playMedia(Track track);
 
         Track getSelectedTrack();
+
+        void setTrackListParams(String trackListName,TrackListType trackListType);
+
+        String getTrackListName();
+
+        TrackListType getTrackListType();
+
+        void takePage(int page,TrackListType trackListType, String trackListName);
 
     }
 
@@ -103,7 +97,7 @@ public interface MVP {
 
         HashMap<String,List<Track>> loadPopularLists();
 
-        void tryToPlayTrack(Track track, TrackListType trackListType);
+        void tryToPlayTrack(Track track);
 
         Track loadTrack();
 

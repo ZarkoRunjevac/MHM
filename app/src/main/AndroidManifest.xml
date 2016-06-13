@@ -31,6 +31,8 @@
             android:label="@string/title_activity_full_screen_player"
             android:theme="@style/FullscreenTheme">
         </activity>
+        <activity android:name=".mhm.ui.activity.TrackListActivity">
+        </activity>
     </application>
 
 </manifest>

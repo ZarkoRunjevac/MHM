@@ -5,5 +5,5 @@ package zarkorunjevac.mhm.mhm.common;
  */
 public enum TrackListType {
     LATEST,
-    POPLUAR
+    POPULAR
 }

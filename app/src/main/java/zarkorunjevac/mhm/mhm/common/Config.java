@@ -13,4 +13,7 @@ public class Config {
 
     public static final List<String> LATEST_LIST_FOR_DOWNLOAD= Arrays.asList("all", "fresh", "remix", "noremix");
     public static final List<String> POPULAR_LIST_FOR_DOWNLOAD=Arrays.asList("now", "remix", "noremix");
+
+    public static final String LIST_NAME="zarkorunjevac.mhm.mhm.common.list_name";
+    public static final String LIST_TYPE=".zarkorunjevac.mhm.mhm.common.list_name";
 }

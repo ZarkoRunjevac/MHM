@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/list_body_color"
-    android:fitsSystemWindows="true">
+<android.support.v4.widget.DrawerLayout android:id="@+id/drawer"
+                                        xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@color/colorPrimaryDark"
+                                        android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/main_content"
@@ -29,33 +29,33 @@
 
                 <TextView
 
+                    android:id="@+id/toolbar_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="My Hype Machine"
                     android:layout_gravity="center"
-                    android:id="@+id/toolbar_title" />
+                    android:text="My Hype Machine"/>
             </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/fragment_playback_controls"
             android:layout_below="@+id/appbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_above="@+id/fragment_playback_controls" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <fragment
             android:id="@+id/fragment_playback_controls"
             android:name="zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"/>
 
         <ProgressBar
             android:id="@+id/progressBar_loading"
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 
@@ -74,5 +74,5 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navheader"
-        app:menu="@menu/menu_navigation" />
+        app:menu="@menu/menu_navigation"/>
 </android.support.v4.widget.DrawerLayout>

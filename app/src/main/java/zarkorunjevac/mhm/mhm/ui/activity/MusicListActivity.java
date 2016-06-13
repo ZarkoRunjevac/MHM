@@ -47,7 +47,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     protected ViewPager mViewPager;
     protected TabLayout mTabs;
     private DrawerLayout mDrawerLayout;
-    private PlaybackControlsFragment mControlsFragment;
+
     private TrackListFragment mLatestTracksFragment;
     private TrackListFragment mPopularTracksFragment;
 
@@ -215,10 +215,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     }
 
-    @Override
-    public void onStreamLinkFound(Track track, TrackListType trackListType) {
-      //no-op
-    }
+
 
     @Override
     public HashMap<String, List<Track>> loadLatestLists() {
@@ -232,8 +229,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
-    public void tryToPlayTrack(Track track, TrackListType trackListType) {
-        getPresenter().startTrackDownload(track,trackListType);
+    public void tryToPlayTrack(Track track) {
+        getPresenter().startTrackDownload(track);
     }
 
 

@@ -2,6 +2,7 @@ package zarkorunjevac.mhm.mhm.ui.fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.ui.activity.MusicListActivity;
+import zarkorunjevac.mhm.mhm.ui.activity.TrackListActivity;
 
 /**
  * Created by zarkorunjevac on 02/05/16.
@@ -61,7 +63,6 @@ public class TrackListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        HashMap<String,List<Track>> trackList=loadTrackList();
 
 
         RelativeLayout.LayoutParams layoutParam = new
@@ -76,8 +77,16 @@ public class TrackListFragment extends Fragment
         List<String> avaliableList=null;
         Bundle data=getArguments();
         setTrackListType(data);
-        if(TrackListType.LATEST==mTrackListType) avaliableList=Config.LATEST_LIST_FOR_DOWNLOAD;
-        if(TrackListType.POPLUAR==mTrackListType) avaliableList=Config.POPULAR_LIST_FOR_DOWNLOAD;
+
+        HashMap<String,List<Track>> trackList=loadTrackList();
+        Log.d(TAG, "onCreateView: trackList.size()=" + trackList.size());
+
+        if(TrackListType.LATEST==mTrackListType) {
+            avaliableList=Config.LATEST_LIST_FOR_DOWNLOAD;
+        }else{
+            avaliableList=Config.POPULAR_LIST_FOR_DOWNLOAD;
+        }
+
 
         for(String listName: avaliableList){
             layout.addView(createView(listName, trackList.get(listName)));
@@ -139,6 +148,14 @@ public class TrackListFragment extends Fragment
                         Log.d("LatestTacksFragment", "onClick: " + adapter.getItemCount());
                     } else {
                         //strartnewactivity
+                        Intent intent=new Intent(mContext, TrackListActivity.class);
+                        Bundle data=new Bundle();
+                        data.putString(Config.LIST_NAME,listName);
+                        data.putString(Config.LIST_TYPE,mTrackListType.toString().toLowerCase());
+                        intent.putExtras(data);
+
+                        startActivity(intent);
+
                     }
                 }
             });
@@ -267,14 +284,16 @@ public class TrackListFragment extends Fragment
 
 
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
-                mMusicListActivityListener.tryToPlayTrack(track, mTrackListType);
+                mMusicListActivityListener.tryToPlayTrack(track);
             }
         }
     }
 
     private HashMap<String,List<Track>> loadTrackList(){
         if(TrackListType.LATEST==mTrackListType){
+
             return mMusicListActivityListener.loadLatestLists();
+
         }else{
             return mMusicListActivityListener.loadPopularLists();
         }
@@ -287,6 +306,6 @@ public class TrackListFragment extends Fragment
     private void setTrackListType(Bundle data){
         String listType=data.getString("listType");
         if(listType.equals("latest")) mTrackListType=TrackListType.LATEST;
-        else mTrackListType=TrackListType.POPLUAR;
+        else mTrackListType=TrackListType.POPULAR;
     }
 }

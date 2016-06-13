@@ -55,8 +55,11 @@ public class DownloadLatestOps implements GenericAsyncTaskOps<String, Void, List
 
     @Override
     public void onPostExecute(List<Track> tracks) {
-
-        if(null!=tracks) mDownloadedTracks.put(mKey,tracks);
+        Log.d(TAG, "onPostExecute: enter");
+        if(null!=tracks){
+            Log.d(TAG, "onPostExecute: tracks.size="+tracks.size());
+            mDownloadedTracks.put(mKey, tracks);
+        }
         mMusicPresenter.onTrackListDownloadComplete(mKey);
 
     }

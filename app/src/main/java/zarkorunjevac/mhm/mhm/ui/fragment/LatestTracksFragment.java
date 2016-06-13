@@ -187,7 +187,7 @@ public class LatestTracksFragment extends Fragment
                 moveAnim.setInterpolator(new BounceInterpolator());
                 moveAnim.start();
                 Log.d("LatestTracksFragment", "onClick: "+track.getPosturl());
-                mMusicListActivityListener.tryToPlayTrack(track, TrackListType.LATEST);
+                mMusicListActivityListener.tryToPlayTrack(track);
             }
         }
     }

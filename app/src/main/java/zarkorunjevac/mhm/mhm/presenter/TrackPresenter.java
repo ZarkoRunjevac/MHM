@@ -44,7 +44,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     public WeakReference<MVP.RequiredViewOps> mView;
 
-    private TrackListType mTrackListType;
+
 
     private int mNumListToHandle;
 
@@ -58,6 +58,14 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
 
     private ConcurrentHashMap<String, List<Track>> mDownloadedTracks;
+
+
+
+    private String mTrackListName;
+
+    private TrackListType mTrackListType;
+
+    //private TrackListType mTrackListType;
 
 
     public TrackPresenter() {
@@ -226,6 +234,21 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     }
 
+    @Override
+    public void setTrackListParams(String trackListName, TrackListType trackListType) {
+        mTrackListName=trackListName;
+        mTrackListType=trackListType;
+    }
+
+    @Override
+    public String getTrackListName() {
+        return mTrackListName;
+    }
+
+    @Override
+    public TrackListType getTrackListType() {
+        return mTrackListType;
+    }
 
     public MVP.ProvidedTrackListDownloadModelOps getModel() {
         return (MVP.ProvidedTrackListDownloadModelOps) mOpsInstance;
@@ -255,9 +278,9 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     }
 
     @Override
-    public void startTrackDownload(Track track, TrackListType trackListType) {
+    public void startTrackDownload(Track track) {
         mSelectedTrack = track;
-        mTrackListType = trackListType;
+
         DownloadLinkFromPageOps downloadLinkFromPageOps = new DownloadLinkFromPageOps(this);
         DownloadLinkFromPageAsyncTask downloadLinkFromPageAsyncTask = new DownloadLinkFromPageAsyncTask(downloadLinkFromPageOps);
 
@@ -271,13 +294,38 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
             initializeMediaPlayer();
             MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
             mControlsFragment.initializeViewFields(mSelectedTrack);
-            Utils.showToast(getActivityContext(),mSelectedTrack.getStreamUrl());
+            Utils.showToast(getActivityContext(), mSelectedTrack.getStreamUrl());
 
             showPlaybackFragment();
             playMedia(mSelectedTrack);
             //mControlsFragment.displayPlayButton();
 
-            mView.get().onStreamLinkFound(mSelectedTrack, mTrackListType);
+
+        }
+    }
+
+    @Override
+    public void takePage(int page,TrackListType trackListType, String trackListName) {
+
+        mNumListToHandle =1;
+        mDownloadedTracks=new ConcurrentHashMap<String, List<Track>>();
+        if(trackListType==TrackListType.LATEST){
+
+            DownloadLatestAsyncTask downloadLatestAsyncTask;
+            DownloadLatestOps downloadLatestOps;
+
+            downloadLatestOps = new DownloadLatestOps(this, getActivityContext(),  mDownloadedTracks, page, 0);
+            downloadLatestAsyncTask = new DownloadLatestAsyncTask(downloadLatestOps);
+            downloadLatestAsyncTask.execute(trackListName);
+
+        }else{
+            DownloadPopularAsyncTask downloadPopularAsyncTask;
+            DownloadPopularOps downloadPopularOps;
+
+            downloadPopularOps = new DownloadPopularOps(this, getActivityContext(),  mDownloadedTracks, page, 0);
+            downloadPopularAsyncTask = new DownloadPopularAsyncTask(downloadPopularOps);
+
+            downloadPopularAsyncTask.execute(trackListName);
         }
     }
 
