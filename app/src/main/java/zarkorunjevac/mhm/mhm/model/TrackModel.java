@@ -14,11 +14,11 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.Config;
+import zarkorunjevac.mhm.mhm.common.RetrofitUtils;
 import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
@@ -61,7 +61,7 @@ public class TrackModel
 
     @Override
     public void onDestroy(boolean isChangingConfigurations) {
-    //no-op
+        //no-op
     }
 
     @Override
@@ -111,20 +111,14 @@ public class TrackModel
     }
 
     private HypemApiService makeHypemService(){
-        Retrofit  hypemService = new Retrofit.Builder()
-                .baseUrl(BASE_URL_HYPEM)
 
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        Retrofit  hypemService = RetrofitUtils.makeRetrofit(BASE_URL_HYPEM);
         return hypemService.create(HypemApiService.class);
     }
 
     private SoundCloudApiService makeSoundCloudService(){
-        Retrofit  soundcloudService = new Retrofit.Builder()
-                .baseUrl(BASE_URL_SOUNDCLOUD)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit  soundcloudService = RetrofitUtils.makeRetrofit(BASE_URL_SOUNDCLOUD);
+
 
         return soundcloudService.create(SoundCloudApiService.class);
     }
