@@ -1,6 +1,7 @@
 package zarkorunjevac.mhm.mhm.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -18,6 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
+import zarkorunjevac.mhm.mhm.ui.activity.FullScreenPlayerActivity;
 
 /**
  * Created by zarko.runjevac on 4/4/2016.
@@ -56,6 +57,9 @@ public class PlaybackControlsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 /// start FullScreenActivity
+                Intent intent=new Intent(mContext, FullScreenPlayerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             }
         });
         Log.d(TAG, "onCreateView: end  ");

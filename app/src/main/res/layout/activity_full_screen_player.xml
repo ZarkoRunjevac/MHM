@@ -1,23 +1,26 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#0099cc"
-             tools:context="zarkorunjevac.mhm.mhm.ui.activity.FullScreenPlayerActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context="zarkorunjevac.mhm.mhm.ui.activity.FullScreenPlayerActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
-        android:id="@+id/fullscreen_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/album_art"
+        tools:src="@drawable/ic_launcher"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold"/>
+        android:layout_width="@dimen/playback_controls_albumart_size"
+        android:layout_height="@dimen/playback_controls_albumart_size"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/currently_playing_song"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
@@ -42,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button"/>
+                android:text="@string/dummy_button" />
 
         </LinearLayout>
     </FrameLayout>

@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.MenuItem;
+import android.support.v4.app.NavUtils;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 
 /**
@@ -34,6 +37,7 @@ public class FullScreenPlayerActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private CircleImageView mAlbumArt;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -90,10 +94,14 @@ public class FullScreenPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_full_screen_player);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        //mContentView = findViewById(R.id.fullscreen_content);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -118,6 +126,17 @@ public class FullScreenPlayerActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button.
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void toggle() {
