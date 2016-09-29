@@ -13,11 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +28,9 @@ import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.Config;
 import zarkorunjevac.mhm.mhm.common.GenericActivity;
-import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.TypefaceUtils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.presenter.TrackPresenter;
-import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
-import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
-import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.TrackListFragment;
 
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
@@ -116,6 +112,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     private void setupViewFields(){
         setupViewPager(mViewPager);
         mTabs.setupWithViewPager(mViewPager);
+        changeTabsFont(mTabs);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -268,6 +265,23 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         Bundle args=new Bundle();
         args.putString("listType",listType);
         return args;
+    }
+
+    private void changeTabsFont(TabLayout tabLayout) {
+
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(this));
+                    ((TextView) tabViewChild).setTextColor(getResources().getColor(R.color.white));
+                }
+            }
+        }
     }
 }
 

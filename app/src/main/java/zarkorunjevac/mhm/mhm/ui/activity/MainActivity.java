@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,28 +13,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.model.pojo.Blog;
-import zarkorunjevac.mhm.mhm.service.HypemApiService;
 import zarkorunjevac.mhm.mhm.ui.fragment.LatestTracksFragment;
 import zarkorunjevac.mhm.mhm.ui.fragment.PopularTracksFragment;
 
@@ -52,54 +38,54 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //////////////
-        OkHttpClient okClient = new OkHttpClient();
-                okClient.interceptors().add(new Interceptor() {
-            @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                Log.d("MainActivity", "intercept "+request.url().toString());
-                com.squareup.okhttp.Response response=chain.proceed(chain.request());
-
-                //Log.d("MainActivity","intercept "+ response.body().string());
-                return response;
-            }
-        });
-        String BASE_URL ="https://api.hypem.com/";
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(okClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        HypemApiService apiService=retrofit.create(HypemApiService.class);
-
-        Call<List<Blog>> call=apiService.getBlogs(true,1,10);
-        call.enqueue(new Callback<List<Blog>>() {
-            @Override
-            public void onResponse(Response<List<Blog>> response) {
-                Log.d("MainActivity", "onResponse Satus code " + response.code());
-                Log.d("MainActivity", "onResponse " + response.body());
-
-
-                blogs = response.body();
-                Toast.makeText(getApplicationContext(), blogs.get(1).getSitename(), Toast.LENGTH_LONG).show();
-                Log.d("MainActivity", "onResponse ");
-
-                // Setting ViewPager for each Tabs
-                ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-                setupViewPager(viewPager, blogs);
-                // Set Tabs inside Toolbar
-                TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-                tabs.setupWithViewPager(viewPager);
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.d("MainActivity", "onFailure " + t.getLocalizedMessage());
-                Toast.makeText(getApplication(), "Nije uspjelo", Toast.LENGTH_LONG).show();
-            }
-        });
+//        OkHttpClient okClient = new OkHttpClient();
+//        okClient.interceptors().add(new Interceptor() {
+//            @Override
+//            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request();
+//                Log.d("MainActivity", "intercept "+request.url().toString());
+//                com.squareup.okhttp.Response response=chain.proceed(chain.request());
+//
+//                //Log.d("MainActivity","intercept "+ response.body().string());
+//                return response;
+//            }
+//        });
+//        String BASE_URL ="https://api.hypem.com/";
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .client(okClient)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        HypemApiService apiService=retrofit.create(HypemApiService.class);
+//
+//        Call<List<Blog>> call=apiService.getBlogs(true,1,10);
+//        call.enqueue(new Callback<List<Blog>>() {
+//            @Override
+//            public void onResponse(Response<List<Blog>> response) {
+//                Log.d("MainActivity", "onResponse Satus code " + response.code());
+//                Log.d("MainActivity", "onResponse " + response.body());
+//
+//
+//                blogs = response.body();
+//                Toast.makeText(getApplicationContext(), blogs.get(1).getSitename(), Toast.LENGTH_LONG).show();
+//                Log.d("MainActivity", "onResponse ");
+//
+//                // Setting ViewPager for each Tabs
+//                ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+//                setupViewPager(viewPager, blogs);
+//                // Set Tabs inside Toolbar
+//                TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+//                tabs.setupWithViewPager(viewPager);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                Log.d("MainActivity", "onFailure " + t.getLocalizedMessage());
+//                Toast.makeText(getApplication(), "Nije uspjelo", Toast.LENGTH_LONG).show();
+//            }
+//        });
         /////////////////
 
 
