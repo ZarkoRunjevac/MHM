@@ -23,6 +23,8 @@ import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
 import zarkorunjevac.mhm.mhm.service.SoundCloudApiService;
+//import zarkorunjevac.mhm.mhm.service.
+
 
 /**
  * Created by zarko.runjevac on 3/24/2016.
@@ -39,7 +41,10 @@ public class TrackModel
 
 
     private HypemApiService mHypemApiService;
+
     private SoundCloudApiService mSoundCloudApiService;
+
+    //private GenericServiceConnection<MusicTrackRequest> mServiceConnectionAsync;
 
 
     /**

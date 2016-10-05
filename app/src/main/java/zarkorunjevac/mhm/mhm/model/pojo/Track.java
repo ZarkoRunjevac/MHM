@@ -5,6 +5,9 @@ package zarkorunjevac.mhm.mhm.model.pojo;
  */
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -12,7 +15,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class Track {
+public class Track implements Parcelable {
 
     @SerializedName("itemid")
     @Expose
@@ -361,4 +364,93 @@ public class Track {
         this.itunesLink = itunesLink;
     }
 
+
+    protected Track(Parcel in) {
+        itemid = in.readString();
+        artist = in.readString();
+        title = in.readString();
+        dateposted = in.readByte() == 0x00 ? null : in.readInt();
+        siteid = in.readByte() == 0x00 ? null : in.readInt();
+        sitename = in.readString();
+        posturl = in.readString();
+        postid = in.readByte() == 0x00 ? null : in.readInt();
+        lovedCount = in.readByte() == 0x00 ? null : in.readInt();
+        postedCount = in.readByte() == 0x00 ? null : in.readInt();
+        thumbUrl = in.readString();
+        thumbUrlMedium = in.readString();
+        thumbUrlLarge = in.readString();
+        time = in.readByte() == 0x00 ? null : in.readInt();
+        description = in.readString();
+        itunesLink = in.readString();
+        mStreamUrl = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(itemid);
+        dest.writeString(artist);
+        dest.writeString(title);
+        if (dateposted == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(dateposted);
+        }
+        if (siteid == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(siteid);
+        }
+        dest.writeString(sitename);
+        dest.writeString(posturl);
+        if (postid == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(postid);
+        }
+        if (lovedCount == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(lovedCount);
+        }
+        if (postedCount == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(postedCount);
+        }
+        dest.writeString(thumbUrl);
+        dest.writeString(thumbUrlMedium);
+        dest.writeString(thumbUrlLarge);
+        if (time == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeInt(time);
+        }
+        dest.writeString(description);
+        dest.writeString(itunesLink);
+        dest.writeString(mStreamUrl);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+        @Override
+        public Track createFromParcel(Parcel in) {
+            return new Track(in);
+        }
+
+        @Override
+        public Track[] newArray(int size) {
+            return new Track[size];
+        }
+    };
 }
