@@ -33,7 +33,7 @@
         <activity android:name=".mhm.ui.activity.TrackListActivity"></activity>
 
         <service
-            android:name=".mhm.service.MusicService"
+            android:name=".mhm.service.MusicPlayerService"
             android:enabled="true"
             android:process=":remote"
             android:exported="true"></service>

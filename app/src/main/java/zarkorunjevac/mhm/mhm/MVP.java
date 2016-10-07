@@ -18,6 +18,7 @@ import zarkorunjevac.mhm.mhm.common.PresenterOps;
 import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
+import zarkorunjevac.mhm.mhm.service.MusicTrackResults;
 
 
 public interface MVP {
@@ -87,6 +88,10 @@ public interface MVP {
         List<String> downloadLinksFromPage(String url) throws IOException;
 
         SoundCloudTrack findMusicStreamLink(String id) throws IOException;
+
+        void togglePlayPause(MusicTrackResults results);
+
+        void playMedia(Track track,MusicTrackResults results);
 
 
     }

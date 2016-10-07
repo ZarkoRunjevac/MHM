@@ -1,11 +1,14 @@
 // MusicTrackRequest.aidl
 package zarkorunjevac.mhm.mhm.service;
-import zarkorunjevac.mhm.mhm.service.MusicTrackResponse;
+import zarkorunjevac.mhm.mhm.service.MusicTrackResults;
+import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
-// Declare any non-default types here with import statements
+
 
 interface MusicTrackRequest {
 
     oneway void playTrack(in Track track,
-                          in MusicTrackResponse results);
+                          in MusicTrackResults results);
+
+    oneway void togglePlayPause(in MusicTrackResults results);
 }

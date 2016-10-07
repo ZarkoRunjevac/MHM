@@ -1,6 +1,7 @@
 package zarkorunjevac.mhm.mhm.model;
 
 import android.content.Context;
+import android.os.RemoteException;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -18,10 +19,15 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import zarkorunjevac.mhm.mhm.MVP;
 import zarkorunjevac.mhm.mhm.common.Config;
+import zarkorunjevac.mhm.mhm.common.GenericServiceConnection;
+import zarkorunjevac.mhm.mhm.common.MusicPlayerServiceStatus;
 import zarkorunjevac.mhm.mhm.common.RetrofitUtils;
 import zarkorunjevac.mhm.mhm.model.pojo.SoundCloudTrack;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 import zarkorunjevac.mhm.mhm.service.HypemApiService;
+import zarkorunjevac.mhm.mhm.service.MusicPlayerService;
+import zarkorunjevac.mhm.mhm.service.MusicTrackRequest;
+import zarkorunjevac.mhm.mhm.service.MusicTrackResults;
 import zarkorunjevac.mhm.mhm.service.SoundCloudApiService;
 //import zarkorunjevac.mhm.mhm.service.
 
@@ -44,7 +50,8 @@ public class TrackModel
 
     private SoundCloudApiService mSoundCloudApiService;
 
-    //private GenericServiceConnection<MusicTrackRequest> mServiceConnectionAsync;
+    private GenericServiceConnection<MusicTrackRequest> mServiceConnectionAsync;
+
 
 
     /**
@@ -62,11 +69,23 @@ public class TrackModel
 
 
         mSoundCloudApiService=makeSoundCloudService();
+
+        mServiceConnectionAsync=
+                new GenericServiceConnection<>(MusicTrackRequest.class);
+
+        bindServices();
     }
 
     @Override
     public void onDestroy(boolean isChangingConfigurations) {
-        //no-op
+
+        if (isChangingConfigurations)
+            Log.d(TAG,
+                    "just a configuration change - unbindService() not called");
+        else
+            // Unbind from the Services only if onDestroy() is not
+            // triggered by a runtime configuration change.
+            unbindServices();
     }
 
     @Override
@@ -98,7 +117,7 @@ public class TrackModel
 
             if (link.contains("api.soundcloud")) {
                 linksOnPage.add(link);
-                Log.d("LatestTacksFragment", "run: " + src.attr("abs:src"));
+                Log.d(TAG, "run: " + src.attr("abs:src"));
             }
 
 
@@ -124,7 +143,95 @@ public class TrackModel
     private SoundCloudApiService makeSoundCloudService(){
         Retrofit  soundcloudService = RetrofitUtils.makeRetrofit(BASE_URL_SOUNDCLOUD);
 
-
         return soundcloudService.create(SoundCloudApiService.class);
+    }
+
+    @Override
+    public void togglePlayPause(MusicTrackResults results) {
+        final MusicTrackRequest musicTrackRequest=
+                mServiceConnectionAsync.getInterface();
+        MusicPlayerServiceStatus status;
+        if(null!= musicTrackRequest){
+            try {
+                musicTrackRequest.togglePlayPause(new MusicTrackResultsImpl(results));
+            }catch (RemoteException e){
+                Log.e(TAG,
+                        "togglePlayPause RemoteException:"
+                                + e.getMessage());
+            }
+
+        }else{
+            Log.d(TAG,
+                    "musicTrackRequest was null.");
+        }
+
+    }
+
+    @Override
+    public void playMedia(Track track,MusicTrackResults results) {
+        final MusicTrackRequest musicTrackRequest=
+                mServiceConnectionAsync.getInterface();
+
+        if(null!= musicTrackRequest){
+            try {
+              musicTrackRequest.playTrack(track,new MusicTrackResultsImpl(results));
+            }catch (RemoteException e){
+                Log.e(TAG,
+                        "togglePlayPause RemoteException:"
+                                + e.getMessage());
+            }
+
+        }else{
+            Log.d(TAG,
+                    "musicTrackRequest was null.");
+        }
+    }
+
+    private void bindServices() {
+        Log.d(TAG,
+                "calling bindService()");
+        if(null==mServiceConnectionAsync.getInterface()){
+            mPresenter.get()
+                    .getApplicationContext()
+                    .bindService
+                            (MusicPlayerService.makeIntent(mPresenter.get().getActivityContext()),
+                             mServiceConnectionAsync,
+                             Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    private void unbindServices() {
+        Log.d(TAG,
+                "calling unbindService()");
+
+        // Unbind the Async Service if it is connected.
+        if (mServiceConnectionAsync.getInterface() != null)
+            mPresenter.get()
+                    .getApplicationContext()
+                    .unbindService
+                            (mServiceConnectionAsync);
+    }
+
+    private static class MusicTrackResultsImpl extends MusicTrackResults.Stub{
+
+        private WeakReference<MusicTrackResults> mMusicTrackResults;
+        public MusicTrackResultsImpl(MusicTrackResults musicTrackResults){
+            mMusicTrackResults=new WeakReference<MusicTrackResults>(musicTrackResults);
+        }
+
+        @Override
+        public void playing(String isPlaying) throws RemoteException {
+
+        }
+
+        @Override
+        public void paused(String isPaused) throws RemoteException {
+
+        }
+
+        @Override
+        public void stopped(String isStopped) throws RemoteException {
+
+        }
     }
 }
