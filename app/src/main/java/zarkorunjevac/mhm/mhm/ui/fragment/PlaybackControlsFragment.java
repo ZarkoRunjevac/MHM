@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -17,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import zarkorunjevac.mhm.R;
 import zarkorunjevac.mhm.mhm.MVP;
+import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
 
 /**
@@ -80,14 +80,27 @@ public class PlaybackControlsFragment extends Fragment
 
     @Override
     public void displayPlayButton() {
-        if(mPlayPause!=null)
-            mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play));
+        Log.d(TAG, "displayPlayButton: Utils.runningOnUiThread()"+ Utils.runningOnUiThread());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mPlayPause!=null)
+                    mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_play));
+            }
+        });
+
     }
 
     @Override
     public void displayPauseButton() {
-        if(mPlayPause!=null)
-         mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_pause));
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mPlayPause!=null)
+                    mPlayPause.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_pause));
+            }
+        });
+
     }
 
     @Override

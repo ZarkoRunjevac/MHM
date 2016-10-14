@@ -221,17 +221,17 @@ public class TrackModel
 
         @Override
         public void playing(String isPlaying) throws RemoteException {
-
+            mMusicTrackResults.get().playing(MusicPlayerServiceStatus.PLAYING.toString());
         }
 
         @Override
         public void paused(String isPaused) throws RemoteException {
-
+            mMusicTrackResults.get().paused(MusicPlayerServiceStatus.PAUSED.toString());
         }
 
         @Override
         public void stopped(String isStopped) throws RemoteException {
-
+            mMusicTrackResults.get().paused(MusicPlayerServiceStatus.STOPPED.toString());
         }
     }
 }

@@ -3,10 +3,11 @@ package zarkorunjevac.mhm.mhm.presenter;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,23 +29,27 @@ import zarkorunjevac.mhm.mhm.common.TrackListType;
 import zarkorunjevac.mhm.mhm.common.Utils;
 import zarkorunjevac.mhm.mhm.model.TrackModel;
 import zarkorunjevac.mhm.mhm.model.pojo.Track;
+import zarkorunjevac.mhm.mhm.service.MusicTrackResults;
 import zarkorunjevac.mhm.mhm.ui.fragment.PlaybackControlsFragment;
 
 /**
  * Created by zarko.runjevac on 3/24/2016.
  */
-public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresenterOps,
+public class TrackPresenter
+        extends GenericPresenter<MVP.RequiredTrackListPresenterOps,
         MVP.ProvidedTrackListDownloadModelOps,
         TrackModel>
-        implements MVP.ProvidedTrackListPresenterOps,
-        MVP.RequiredTrackListPresenterOps {
+        implements
+        MVP.ProvidedTrackListPresenterOps,
+        MVP.RequiredTrackListPresenterOps,
+        MusicTrackResults {
 
     private static final int TRACK_LIST_PAGE = 1;
     private static final int TRACK_LIST_COUNT = 12;
 
     public WeakReference<MVP.RequiredViewOps> mView;
 
-
+    //private boolean mCallInProgress;
 
     private int mNumListToHandle;
 
@@ -59,13 +64,9 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     private ConcurrentHashMap<String, List<Track>> mDownloadedTracks;
 
-
-
     private String mTrackListName;
 
     private TrackListType mTrackListType;
-
-    //private TrackListType mTrackListType;
 
 
     public TrackPresenter() {
@@ -105,14 +106,14 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
         mView.get().dispayResults(mDownloadedTracks);
 
-        if(mMediaPlayer!=null){
+        if (mMediaPlayer != null) {
             Log.d(TAG, "onConfigurationChange: mMediaPlayer.isPlaying()");
             initializePlaybackControlsFragment();
             mControlsFragment.initializeViewFields(mSelectedTrack);
             showPlaybackFragment();
-            if(mMediaPlayer.isPlaying()){
+            if (mMediaPlayer.isPlaying()) {
                 mControlsFragment.displayPlayButton();
-            }else{
+            } else {
                 mControlsFragment.displayPauseButton();
             }
 
@@ -236,8 +237,8 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     @Override
     public void setTrackListParams(String trackListName, TrackListType trackListType) {
-        mTrackListName=trackListName;
-        mTrackListType=trackListType;
+        mTrackListName = trackListName;
+        mTrackListType = trackListType;
     }
 
     @Override
@@ -291,12 +292,12 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     public void onTrackDownloadComplete(String link) {
         if (link != null) {
             mSelectedTrack.setStreamUrl(link + "?client_id=" + Config.CLIENT_ID);
-            initializeMediaPlayer();
-            MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps=(MVP.ProvidedPlaybackControlsFragmentOps)mControlsFragment;
+            //initializeMediaPlayer();
+            MVP.ProvidedPlaybackControlsFragmentOps providedPlaybackControlsFragmentOps = (MVP.ProvidedPlaybackControlsFragmentOps) mControlsFragment;
             mControlsFragment.initializeViewFields(mSelectedTrack);
             Utils.showToast(getActivityContext(), mSelectedTrack.getStreamUrl());
 
-            showPlaybackFragment();
+            //showPlaybackFragment();
             playMedia(mSelectedTrack);
             //mControlsFragment.displayPlayButton();
 
@@ -305,24 +306,24 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     }
 
     @Override
-    public void takePage(int page,TrackListType trackListType, String trackListName) {
+    public void takePage(int page, TrackListType trackListType, String trackListName) {
 
-        mNumListToHandle =1;
-        mDownloadedTracks=new ConcurrentHashMap<String, List<Track>>();
-        if(trackListType==TrackListType.LATEST){
+        mNumListToHandle = 1;
+        mDownloadedTracks = new ConcurrentHashMap<String, List<Track>>();
+        if (trackListType == TrackListType.LATEST) {
 
             DownloadLatestAsyncTask downloadLatestAsyncTask;
             DownloadLatestOps downloadLatestOps;
 
-            downloadLatestOps = new DownloadLatestOps(this, getActivityContext(),  mDownloadedTracks, page, 0);
+            downloadLatestOps = new DownloadLatestOps(this, getActivityContext(), mDownloadedTracks, page, 0);
             downloadLatestAsyncTask = new DownloadLatestAsyncTask(downloadLatestOps);
             downloadLatestAsyncTask.execute(trackListName);
 
-        }else{
+        } else {
             DownloadPopularAsyncTask downloadPopularAsyncTask;
             DownloadPopularOps downloadPopularOps;
 
-            downloadPopularOps = new DownloadPopularOps(this, getActivityContext(),  mDownloadedTracks, page, 0);
+            downloadPopularOps = new DownloadPopularOps(this, getActivityContext(), mDownloadedTracks, page, 0);
             downloadPopularAsyncTask = new DownloadPopularAsyncTask(downloadPopularOps);
 
             downloadPopularAsyncTask.execute(trackListName);
@@ -331,38 +332,12 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
 
     @Override
     public void togglePlayPause() {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.pause();
-           // mView.get().displayPauseButton();
-            mControlsFragment.displayPlayButton();
-
-        } else {
-            mMediaPlayer.start();
-            //mView.get().displayPlayButton();
-            mControlsFragment.displayPauseButton();
-        }
+        getModel().togglePlayPause(this);
     }
 
     @Override
     public void playMedia(Track track) {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            if(null!=mControlsFragment){
-                mControlsFragment.displayPauseButton();
-            }
-
-        }
-
-        try {
-            mMediaPlayer.reset();
-            mMediaPlayer.setDataSource(track.getStreamUrl());
-            mMediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException ex) {
-            Log.d(TAG, "playMedia: ex.getLocalizedMessage()=" + ex.getLocalizedMessage());
-        }
+        getModel().playMedia(track,this);
     }
 
     @Override
@@ -373,7 +348,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     private MediaPlayer.OnCompletionListener mMediaPlayerCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-           // mView.get().displayPlayButton();
+            // mView.get().displayPlayButton();
             mControlsFragment.displayPauseButton();
         }
     };
@@ -405,9 +380,7 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
     }
 
 
-
-
-    private void showPlaybackFragment(){
+    private void showPlaybackFragment() {
         Log.d(TAG, "showPlaybackFragment: ");
         getSupportFragmentManager().beginTransaction()
 
@@ -422,5 +395,28 @@ public class TrackPresenter extends GenericPresenter<MVP.RequiredTrackListPresen
         getSupportFragmentManager().beginTransaction()
                 .hide(mControlsFragment)
                 .commit();
+    }
+
+    @Override
+    public void playing(String isPlaying) throws RemoteException {
+        Log.d(TAG, "playing: ");
+        showPlaybackFragment();
+        mControlsFragment.displayPauseButton();
+    }
+
+    @Override
+    public void paused(String isPaused) throws RemoteException {
+        Log.d(TAG, "paused: ");
+        mControlsFragment.displayPlayButton();
+    }
+
+    @Override
+    public void stopped(String isStopped) throws RemoteException {
+
+    }
+
+    @Override
+    public IBinder asBinder() {
+        return null;
     }
 }
