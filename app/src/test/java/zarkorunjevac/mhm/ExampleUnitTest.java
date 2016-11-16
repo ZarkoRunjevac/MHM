@@ -1,4 +1,4 @@
-package zarkorunjevac.mhm;
+package com.zarkorunjevac.mhm.mhm;
 
 import org.junit.Test;
 
