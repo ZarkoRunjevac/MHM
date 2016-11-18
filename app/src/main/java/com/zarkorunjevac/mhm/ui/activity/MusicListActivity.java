@@ -1,6 +1,8 @@
 package com.zarkorunjevac.mhm.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,15 +19,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
-
-import com.zarkorunjevac.mhm.R;
 import com.zarkorunjevac.mhm.MVP;
+import com.zarkorunjevac.mhm.R;
+import com.zarkorunjevac.mhm.common.BottomNavigationViewHelper;
 import com.zarkorunjevac.mhm.common.Config;
 import com.zarkorunjevac.mhm.common.GenericActivity;
 import com.zarkorunjevac.mhm.common.TypefaceUtils;
@@ -33,11 +29,19 @@ import com.zarkorunjevac.mhm.model.pojo.Track;
 import com.zarkorunjevac.mhm.presenter.TrackPresenter;
 import com.zarkorunjevac.mhm.ui.fragment.TrackListFragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+
 public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedTrackListPresenterOps,
         TrackPresenter>
         implements MVP.RequiredViewOps,
-        MVP.ProvidedMusicListActivityOps{
+        MVP.ProvidedMusicListActivityOps,
+        BottomNavigationView.OnNavigationItemSelectedListener{
 
     protected ProgressBar mLoadingProgressBar;
     protected ViewPager mViewPager;
@@ -47,6 +51,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     private TrackListFragment mLatestTracksFragment;
     private TrackListFragment mPopularTracksFragment;
 
+    private BottomNavigationView mBottomNavigationView;
 
     private HashMap<String,List<Track>> mPopularLists=new HashMap<String,List<Track>>();
     private HashMap<String,List<Track>> mLatestLists=new HashMap<String,List<Track>>();
@@ -106,6 +111,10 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         mTabs = (TabLayout) findViewById(R.id.tabs);
 
+        mBottomNavigationView=(BottomNavigationView) findViewById(R.id.navigation_view);
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
+       // mBottomNavigationView.inflateMenu(R.menu.navigation_latest);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
     }
 
@@ -124,6 +133,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         viewPager.setAdapter(adapter);
 
     }
+
+
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -190,6 +201,11 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     @Override
     public void reportDownloadFailure(String listName) {
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
     @Override

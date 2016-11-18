@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/latest_all"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="@string/latest_all" />
+
+    <item
+        android:id="@+id/latest_fresh"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="@string/latest_fresh" />
+
+    <item
+        android:id="@+id/latest_remix"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="@string/latest_remix" />
+    <item
+        android:id="@+id/latest_noremix"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="@string/latest_noremix" />
+
+
+</menu>
