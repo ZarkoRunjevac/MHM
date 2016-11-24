@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +42,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         TrackPresenter>
         implements MVP.RequiredViewOps,
         MVP.ProvidedMusicListActivityOps,
-        BottomNavigationView.OnNavigationItemSelectedListener{
+        BottomNavigationView.OnNavigationItemSelectedListener,
+        ViewPager.OnPageChangeListener{
 
     protected ProgressBar mLoadingProgressBar;
     protected ViewPager mViewPager;
@@ -102,7 +104,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         toolbarTitle.setTextColor(getResources().getColor(R.color.white));
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-
+        mViewPager.addOnPageChangeListener(this);
         mLatestTracksFragment=new TrackListFragment();
         mLatestTracksFragment.setArguments(makeFragmentBundle("latest"));
 
@@ -113,7 +115,7 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         mBottomNavigationView=(BottomNavigationView) findViewById(R.id.navigation_view);
         BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
-       // mBottomNavigationView.inflateMenu(R.menu.navigation_latest);
+
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
     }
@@ -199,6 +201,32 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
     @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d(TAG, "onPageSelected: position"+position);
+        if(position==0){
+
+            mBottomNavigationView.getMenu().clear();
+            mBottomNavigationView.inflateMenu(R.menu.navigation_latest);
+
+        }else{
+            mBottomNavigationView.getMenu().clear();
+            mBottomNavigationView.inflateMenu(R.menu.navigation_popular);
+        }
+        changeMenuFont(mBottomNavigationView.getMenu());
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
     public void reportDownloadFailure(String listName) {
 
     }
@@ -259,28 +287,20 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         getPresenter().togglePlayPause();
     }
 
-//    private void showPlaybackFragment(){
-//        Log.d(TAG, "showPlaybackFragment: ");
-//        getSupportFragmentManager().beginTransaction()
-//
-////                .setCustomAnimations(R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
-////                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)
-//                .show(mControlsFragment)
-//                .commit();
-//    }
-//
-//    protected void hidePlaybackControls() {
-//
-//        Log.d(TAG, "hidePlaybackControls");
-//        getSupportFragmentManager().beginTransaction()
-//                .hide(mControlsFragment)
-//                .commit();
-//    }
 
     private Bundle makeFragmentBundle(String listType){
         Bundle args=new Bundle();
         args.putString("listType",listType);
         return args;
+    }
+
+    private void changeMenuFont(Menu menu){
+        for(int i=0;i<menu.size();i++){
+            MenuItem menuItem=menu.getItem(i);
+            SpannableString newTitle=new SpannableString(menuItem.getTitle());
+            newTitle.setSpan(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(this),0,newTitle.length(),0);
+            menuItem.setTitle(newTitle);
+        }
     }
 
     private void changeTabsFont(TabLayout tabLayout) {

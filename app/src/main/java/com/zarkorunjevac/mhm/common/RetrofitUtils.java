@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.zarkorunjevac.mhm.BuildConfig;
+import com.zarkorunjevac.mhm.MhmApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +20,6 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.zarkorunjevac.mhm.BuildConfig;
-import com.zarkorunjevac.mhm.MhmApplication;
 
 import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 import static okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
@@ -38,11 +38,11 @@ public class RetrofitUtils {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-         return new Retrofit.Builder()
-                 .baseUrl(baseUrl)
-                 .client(makeOkHttpClient())
-                 .addConverterFactory(GsonConverterFactory.create(gson))
-                 .build();
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(makeOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
 
     }
 
@@ -53,8 +53,8 @@ public class RetrofitUtils {
                 .addInterceptor( makeOfflineCacheInterceptor() )
                 .addNetworkInterceptor( makeCacheInterceptor() )
                 .cache( makeCache())
-                .connectTimeout(2, TimeUnit.MINUTES)
-                .readTimeout(2, TimeUnit.MINUTES)
+                //.connectTimeout(2, TimeUnit.MINUTES)
+                //.readTimeout(2, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -65,6 +65,7 @@ public class RetrofitUtils {
         {
             cache = new Cache( new File( MhmApplication.getInstance().getCacheDir(), "http-cache" ),
                     10 * 1024 * 1024 ); // 10 MB
+            Log.d("RetrofitUtils", "makeCache: "+MhmApplication.getInstance().getCacheDir().toString());
         }
         catch (Exception e)
         {
@@ -100,10 +101,12 @@ public class RetrofitUtils {
 
                 // re-write response header to force use of cache
                 CacheControl cacheControl = new CacheControl.Builder()
-                        .maxAge( 2, TimeUnit.MINUTES )
+                        .maxAge( 5, TimeUnit.MINUTES )
                         .build();
 
                 return response.newBuilder()
+                        .removeHeader("Pragma")
+                        .removeHeader("Cache-Control")
                         .header( CACHE_CONTROL, cacheControl.toString() )
                         .build();
             }
