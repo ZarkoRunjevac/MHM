@@ -16,4 +16,7 @@ public class Config {
 
     public static final String LIST_NAME="com.zarkorunjevac.mhm.common.list_name";
     public static final String LIST_TYPE=".com.zarkorunjevac.mhm.common.list_name";
+
+    public static final String LATEST="latest";
+    public static final String POPULAR="popular";
 }

@@ -12,6 +12,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.zarkorunjevac.mhm.MVP;
+import com.zarkorunjevac.mhm.R;
+import com.zarkorunjevac.mhm.common.Config;
+import com.zarkorunjevac.mhm.common.EndlessRecyclerViewScrollListener;
+import com.zarkorunjevac.mhm.common.GenericActivity;
+import com.zarkorunjevac.mhm.common.TrackListType;
+import com.zarkorunjevac.mhm.common.TypefaceUtils;
+import com.zarkorunjevac.mhm.model.pojo.Track;
+import com.zarkorunjevac.mhm.presenter.TrackPresenter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,22 +29,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import com.zarkorunjevac.mhm.R;
-import com.zarkorunjevac.mhm.MVP;
-import com.zarkorunjevac.mhm.common.Config;
-import com.zarkorunjevac.mhm.common.EndlessRecyclerViewScrollListener;
-
-import com.zarkorunjevac.mhm.common.GenericActivity;
-import com.zarkorunjevac.mhm.common.TrackListType;
-import com.zarkorunjevac.mhm.common.TypefaceUtils;
-import com.zarkorunjevac.mhm.model.pojo.Track;
-import com.zarkorunjevac.mhm.presenter.TrackPresenter;
 
 public class TrackListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedTrackListPresenterOps,
         TrackPresenter>
         implements MVP.RequiredViewOps,
-        MVP.ProvidedMusicListActivityOps {
+        MVP.ProvidedMusicListOps {
 
     protected ProgressBar mLoadingProgressBar;
     List<Track> mTrackList;

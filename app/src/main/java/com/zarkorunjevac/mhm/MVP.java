@@ -102,7 +102,7 @@ public interface MVP {
 
     }
 
-    public interface ProvidedMusicListActivityOps{
+    public interface ProvidedMusicListOps {
 
         HashMap<String,List<Track>> loadLatestLists( );
 
@@ -113,8 +113,6 @@ public interface MVP {
         Track loadTrack();
 
         void togglePlayPause();
-
-
 
 
     }
@@ -134,4 +132,34 @@ public interface MVP {
 
         void initializeViewFields(Track track);
     }
+
+
+    public interface ProvidedTrackFragmentOps{
+
+        void startTrackListDownload(List<String> latest, List<String> popular);
+
+        void startTrackDownload(Track track);
+
+        void togglePlayPause();
+
+        void playMedia(Track track);
+
+        Track getSelectedTrack();
+
+        void setTrackListParams(String trackListName,TrackListType trackListType);
+
+        String getTrackListName();
+
+        TrackListType getTrackListType();
+
+        void takePage(int page,TrackListType trackListType, String trackListName);
+
+        void playMedia();
+
+        void pauseMedia();
+
+    }
+
+
+
 }

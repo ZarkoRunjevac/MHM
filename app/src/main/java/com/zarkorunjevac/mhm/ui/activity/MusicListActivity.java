@@ -25,10 +25,13 @@ import com.zarkorunjevac.mhm.R;
 import com.zarkorunjevac.mhm.common.BottomNavigationViewHelper;
 import com.zarkorunjevac.mhm.common.Config;
 import com.zarkorunjevac.mhm.common.GenericActivity;
+import com.zarkorunjevac.mhm.common.SmartFragmentStatePagerAdapter;
 import com.zarkorunjevac.mhm.common.TypefaceUtils;
+import com.zarkorunjevac.mhm.common.Utils;
 import com.zarkorunjevac.mhm.model.pojo.Track;
 import com.zarkorunjevac.mhm.presenter.TrackPresenter;
 import com.zarkorunjevac.mhm.ui.fragment.TrackListFragment;
+import com.zarkorunjevac.mhm.ui.fragment.TracksFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +44,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         MVP.ProvidedTrackListPresenterOps,
         TrackPresenter>
         implements MVP.RequiredViewOps,
-        MVP.ProvidedMusicListActivityOps,
+        MVP.ProvidedMusicListOps,
         BottomNavigationView.OnNavigationItemSelectedListener,
-        ViewPager.OnPageChangeListener{
+        ViewPager.OnPageChangeListener {
 
     protected ProgressBar mLoadingProgressBar;
     protected ViewPager mViewPager;
@@ -52,11 +55,18 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     private TrackListFragment mLatestTracksFragment;
     private TrackListFragment mPopularTracksFragment;
+    private TracksFragment mLatestFragment;
+    private TracksFragment mPopularFragment;
+    private int mSelectedTab = 0;
+    private String mSelectedLatestMenuItem = Config.LATEST_LIST_FOR_DOWNLOAD.get(0);
+    private String mSelectedPopularMenuItem = Config.POPULAR_LIST_FOR_DOWNLOAD.get(0);
 
     private BottomNavigationView mBottomNavigationView;
+    private SmartFragmentStatePagerAdapter mAdapter;
 
-    private HashMap<String,List<Track>> mPopularLists=new HashMap<String,List<Track>>();
-    private HashMap<String,List<Track>> mLatestLists=new HashMap<String,List<Track>>();
+    private HashMap<String, List<Track>> mPopularLists = new HashMap<String, List<Track>>();
+    private HashMap<String, List<Track>> mLatestLists = new HashMap<String, List<Track>>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +87,6 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -105,22 +114,24 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.addOnPageChangeListener(this);
-        mLatestTracksFragment=new TrackListFragment();
+
+        mLatestTracksFragment = new TrackListFragment();
         mLatestTracksFragment.setArguments(makeFragmentBundle("latest"));
 
-        mPopularTracksFragment=new TrackListFragment();
+        mPopularTracksFragment = new TrackListFragment();
         mPopularTracksFragment.setArguments(makeFragmentBundle("popular"));
+
 
         mTabs = (TabLayout) findViewById(R.id.tabs);
 
-        mBottomNavigationView=(BottomNavigationView) findViewById(R.id.navigation_view);
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation_view);
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView,0);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
     }
 
-    private void setupViewFields(){
+    private void setupViewFields() {
         setupViewPager(mViewPager);
         mTabs.setupWithViewPager(mViewPager);
         changeTabsFont(mTabs);
@@ -128,15 +139,121 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
+        mAdapter = new PagerAdapter(getSupportFragmentManager());
+        //adapter.addFragment(mLatestTracksFragment, "Latest");
+        //adapter.addFragment(mPopularTracksFragment, "Popular");
 
-        adapter.addFragment(mLatestTracksFragment, "Latest");
-        adapter.addFragment(mPopularTracksFragment, "Popular");
-
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(mAdapter);
 
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.d(TAG, "onPageSelected: position " + position);
+        mSelectedTab = position;
+        //Log.d(TAG, "onPageSelected: selected item index " +findSelectedItem());
+
+        BottomNavigationViewHelper.resetActiveButton(mBottomNavigationView);
+        mBottomNavigationView.getMenu().clear();
+        if (position == 0) {
+            mBottomNavigationView.inflateMenu(R.menu.navigation_latest);
+
+           // mBottomNavigationView.getMenu().getItem(Config.LATEST_LIST_FOR_DOWNLOAD.indexOf(mSelectedLatestMenuItem)).setChecked(true);
+            BottomNavigationViewHelper.setActiveButton(mBottomNavigationView,Config.LATEST_LIST_FOR_DOWNLOAD.indexOf(mSelectedLatestMenuItem));
+            BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView,Config.LATEST_LIST_FOR_DOWNLOAD.indexOf(mSelectedLatestMenuItem));
+
+        } else {
+
+            mBottomNavigationView.inflateMenu(R.menu.navigation_popular);
+            BottomNavigationViewHelper.setActiveButton(mBottomNavigationView,Config.POPULAR_LIST_FOR_DOWNLOAD.indexOf(mSelectedPopularMenuItem));
+            //mBottomNavigationView.getMenu().getItem(Config.POPULAR_LIST_FOR_DOWNLOAD.indexOf(mSelectedPopularMenuItem)).setChecked(true);
+            BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView,Config.POPULAR_LIST_FOR_DOWNLOAD.indexOf(mSelectedPopularMenuItem));
+
+        }
+        changeMenuFont(mBottomNavigationView.getMenu());
+
+
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void reportDownloadFailure(String listName) {
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "onNavigationItemSelected: "+item.getTitle());
+
+        if (mSelectedTab == 0) {
+            mSelectedLatestMenuItem = item.getTitle().toString();
+            mViewPager.getAdapter().notifyDataSetChanged();
+
+        } else {
+            mSelectedPopularMenuItem = item.getTitle().toString();
+            mViewPager.getAdapter().notifyDataSetChanged();
+
+        }
+        return true;
+
+
+    }
+
+
+    public class PagerAdapter extends SmartFragmentStatePagerAdapter {
+        private int NUM_ITEMS = 2;
+
+        public PagerAdapter(FragmentManager manager) {
+            super(manager);
+
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_ITEMS;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                Utils.showToast(getApplicationContext(), MusicListActivity.this.mSelectedLatestMenuItem + " latest");
+                Log.d("MusicListActivity", "getItem: MusicListActivity.this.mSelectedLatestMenuItem=" + MusicListActivity.this.mSelectedLatestMenuItem + " Config.LATEST=" + Config.LATEST);
+                return TracksFragment.newInstance(MusicListActivity.this.mSelectedLatestMenuItem, Config.LATEST);
+
+            } else {
+                Utils.showToast(getApplicationContext(), MusicListActivity.this.mSelectedPopularMenuItem + " popular");
+                Log.d("MusicListActivity", "getItem: MusicListActivity.this.mSelectedPopularMenuItem=" + MusicListActivity.this.mSelectedPopularMenuItem + " Config.POPULAR=" + Config.POPULAR);
+                return TracksFragment.newInstance(MusicListActivity.this.mSelectedPopularMenuItem, Config.POPULAR);
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (0 == position) return "Latest";
+            else return "Popular";
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+
+            return POSITION_NONE;
+
+        }
+
+
+    }
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -165,6 +282,8 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
+
     }
 
 
@@ -205,50 +324,19 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
 
     }
 
-    @Override
-    public void onPageSelected(int position) {
-        Log.d(TAG, "onPageSelected: position"+position);
-        if(position==0){
-
-            mBottomNavigationView.getMenu().clear();
-            mBottomNavigationView.inflateMenu(R.menu.navigation_latest);
-
-        }else{
-            mBottomNavigationView.getMenu().clear();
-            mBottomNavigationView.inflateMenu(R.menu.navigation_popular);
-        }
-        changeMenuFont(mBottomNavigationView.getMenu());
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void reportDownloadFailure(String listName) {
-
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
-    }
 
     @Override
     public void dispayResults(ConcurrentHashMap<String, List<Track>> trackLists) {
-        Log.d(TAG, "dispayResults: trackLists.size="+trackLists.size());
-        mLatestLists=new HashMap<String,List<Track>>();
-        mPopularLists=new HashMap<String,List<Track>>();
-        for(Map.Entry<String,List<Track>> list:trackLists.entrySet()){
-            String listName=list.getKey();
-            String[] parts=listName.split(Pattern.quote("."));
-            if(parts[0].equals("latest")){
-                mLatestLists.put(parts[1],list.getValue());
-            }
-            else{
-                mPopularLists.put(parts[1],list.getValue());
+        Log.d(TAG, "dispayResults: trackLists.size=" + trackLists.size());
+        mLatestLists = new HashMap<String, List<Track>>();
+        mPopularLists = new HashMap<String, List<Track>>();
+        for (Map.Entry<String, List<Track>> list : trackLists.entrySet()) {
+            String listName = list.getKey();
+            String[] parts = listName.split(Pattern.quote("."));
+            if (parts[0].equals("latest")) {
+                mLatestLists.put(parts[1], list.getValue());
+            } else {
+                mPopularLists.put(parts[1], list.getValue());
             }
         }
 
@@ -257,10 +345,9 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
 
-
     @Override
     public HashMap<String, List<Track>> loadLatestLists() {
-        Log.d(TAG, "loadLatestLists:mLatestLists.size()= "+mLatestLists.size());
+        Log.d(TAG, "loadLatestLists:mLatestLists.size()= " + mLatestLists.size());
         return mLatestLists;
     }
 
@@ -281,24 +368,32 @@ public class MusicListActivity extends GenericActivity<MVP.RequiredViewOps,
     }
 
 
-
     @Override
     public void togglePlayPause() {
         getPresenter().togglePlayPause();
     }
 
 
-    private Bundle makeFragmentBundle(String listType){
-        Bundle args=new Bundle();
-        args.putString("listType",listType);
+    private Bundle makeFragmentBundle(String listType) {
+        Bundle args = new Bundle();
+        args.putString("listType", listType);
         return args;
     }
 
-    private void changeMenuFont(Menu menu){
-        for(int i=0;i<menu.size();i++){
-            MenuItem menuItem=menu.getItem(i);
-            SpannableString newTitle=new SpannableString(menuItem.getTitle());
-            newTitle.setSpan(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(this),0,newTitle.length(),0);
+    private Bundle makeTracksFragmentBundle(String listType, String list) {
+
+        Bundle args = new Bundle();
+        args.putString("listType", listType);
+        args.putString("list", list);
+
+        return args;
+    }
+
+    private void changeMenuFont(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem menuItem = menu.getItem(i);
+            SpannableString newTitle = new SpannableString(menuItem.getTitle());
+            newTitle.setSpan(TypefaceUtils.getTypeFaceHelevticaNeueProMedium(this), 0, newTitle.length(), 0);
             menuItem.setTitle(newTitle);
         }
     }

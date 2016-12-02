@@ -40,7 +40,7 @@ public class TrackListFragment extends Fragment
     protected final static String TAG =
             TrackListFragment.class.getSimpleName();
 
-    private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
+    private MVP.ProvidedMusicListOps mMusicListActivityListener;
 
     private TrackListType mTrackListType;
 
@@ -99,8 +99,8 @@ public class TrackListFragment extends Fragment
     public void onAttach(Context context) {
         mContext=context;
         super.onAttach(mContext);
-        if(mContext instanceof MVP.ProvidedMusicListActivityOps)  {
-            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)mContext;
+        if(mContext instanceof MVP.ProvidedMusicListOps)  {
+            mMusicListActivityListener=(MVP.ProvidedMusicListOps)mContext;
         }
     }
 

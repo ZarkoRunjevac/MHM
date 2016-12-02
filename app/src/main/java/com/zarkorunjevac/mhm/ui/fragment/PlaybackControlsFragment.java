@@ -36,7 +36,7 @@ public class PlaybackControlsFragment extends Fragment
     private Track mTrack;
 
     private Context mContext;
-    private MVP.ProvidedMusicListActivityOps mMusicListActivityListener;
+    private MVP.ProvidedMusicListOps mMusicListActivityListener;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,8 +73,8 @@ public class PlaybackControlsFragment extends Fragment
     public void onAttach(Context context) {
         mContext=context;
         super.onAttach(mContext);
-        if(context instanceof MVP.ProvidedMusicListActivityOps){
-            mMusicListActivityListener=(MVP.ProvidedMusicListActivityOps)mContext;
+        if(context instanceof MVP.ProvidedMusicListOps){
+            mMusicListActivityListener=(MVP.ProvidedMusicListOps)mContext;
         }
     }
 
